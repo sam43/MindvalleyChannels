@@ -1,4 +1,4 @@
-package com.sam43.mindvalleychannels
+package com.sam43.mindvalleychannels.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
