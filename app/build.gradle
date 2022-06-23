@@ -89,6 +89,9 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
 
+    // recyclerview snap helper
+    implementation 'com.github.rubensousa:gravitysnaphelper:2.2.2'
+
     def jUnitVersion = "4.13.2"
     def androidXMockitoVersion = "4.2.0"
     // Required -- JUnit 4 framework
@@ -104,8 +107,8 @@ dependencies {
     // Testing Navigation UI
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
     // Testing using Hilt
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.40.5'
-    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.38.1'
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
     //For runBlockingTest, CoroutineDispatcher etc.
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
