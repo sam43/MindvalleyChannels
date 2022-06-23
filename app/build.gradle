@@ -16,7 +16,9 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // Create own/custom application suite for HiltProject
+        testInstrumentationRunner "com.sam43.mindvalleychannels.HiltTestRunner"
     }
 
     buildFeatures {
