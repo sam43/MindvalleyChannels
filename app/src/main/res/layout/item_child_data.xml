@@ -16,12 +16,12 @@
     <ImageView
         android:id="@+id/imageView_single_movie"
         android:layout_width="match_parent"
-        android:src="@drawable/ic_launcher_background"
+        android:src="@drawable/placeholder"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
         android:contentDescription="@string/app_name" />
 
-    <TextView
+    <com.sam43.mindvalleychannels.utils.uicomponents.GilroyTextViewMedium
         android:id="@+id/tvInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
