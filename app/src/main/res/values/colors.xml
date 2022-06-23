@@ -5,9 +5,9 @@
     <color name="secondary">#FF03DAC5</color>
     <color name="secondary_dark">#FF018786</color>
     <color name="backGround">#23272F</color>
-    <color name="backGroundAd">#0E1011</color>
-    <color name="mainText">#FFFFFFFF</color>
-    <color name="textAd">#BABABA</color>
+    <color name="mainTitle">#FFFFFFFF</color>
+    <color name="subTitle">#95989D</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

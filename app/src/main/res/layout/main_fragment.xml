@@ -7,11 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainFragment">
 
-    <com.sam43.mindvalleychannels.utils.uicomponents.GilroyTextViewBold
-        android:id="@+id/message"
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TextHeading3Style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MainFragment"
+        android:text="@string/label_channels"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
