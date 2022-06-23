@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sam43.mindvalleychannels.R
-import com.sam43.mindvalleychannels.utils.uicomponents.GilroyTextViewMedium
 
 @SuppressLint("NotifyDataSetChanged")
 class ChildAdapter : RecyclerView.Adapter<ChildAdapter.VH>() {
@@ -21,7 +21,7 @@ class ChildAdapter : RecyclerView.Adapter<ChildAdapter.VH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         return VH(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.item_child_data,
+                R.layout.item_child_data_portrait,
                 parent,
                 false
             )
@@ -36,7 +36,7 @@ class ChildAdapter : RecyclerView.Adapter<ChildAdapter.VH>() {
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
 
-        private val textView: GilroyTextViewMedium = view.findViewById(R.id.tvInfo)
+        private val textView: TextView = view.findViewById(R.id.tvInfo)
 
         init {
             view.setOnClickListener {

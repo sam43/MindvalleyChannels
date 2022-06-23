@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="TextHeading1Style" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textSize">@dimen/sp_17</item>
+        <item name="android:letterSpacing" tools:targetApi="lollipop">0.02</item>
+        <item name="android:spacing">0.02dp</item>
+        <item name="android:textColor">@color/mainTitle</item>
+    </style>
+    <style name="TextHeading2Style" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:letterSpacing" tools:targetApi="lollipop">0.01</item>
+        <item name="android:spacing">0.01dp</item>
+        <item name="android:textColor">@color/subTitle</item>
+    </style>
+    <style name="TextHeading3Style" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textSize">@dimen/sp_13</item>
+        <item name="android:letterSpacing" tools:targetApi="lollipop">0.08</item>
+        <item name="android:spacing">0.08dp</item>
+        <item name="android:textColor">@color/subTitle</item>
+    </style>
+</resources>
