@@ -15,10 +15,5 @@ class MainActivity : AppCompatActivity() {
         window.transparentStatusBar()
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(binding.container.id, MainFragment.newInstance())
-                .commitNow()
-        }
     }
 }
