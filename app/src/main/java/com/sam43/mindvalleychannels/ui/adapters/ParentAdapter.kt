@@ -5,11 +5,11 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import com.sam43.mindvalleychannels.R
+import com.sam43.mindvalleychannels.utils.uicomponents.GilroyTextViewBold
 
 @SuppressLint("NotifyDataSetChanged")
 class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
@@ -51,7 +51,7 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
     class VH(view: View, private val scrollStateHolder: ScrollStateHolder) :
         RecyclerView.ViewHolder(view), ScrollStateHolder.ScrollStateKeyProvider {
 
-        private val titleTextView: TextView = view.findViewById(R.id.nestedTitleTextView)
+        private val titleTextView: GilroyTextViewBold = view.findViewById(R.id.nestedTitleTextView)
         private val recyclerView: RecyclerView = view.findViewById(R.id.nestedRecyclerView)
         private val layoutManager = LinearLayoutManager(
             view.context,
@@ -95,7 +95,7 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
             if (recyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE) {
                 snapHelper.findSnapView(layoutManager)?.let {
                     val snapDistance = snapHelper.calculateDistanceToFinalSnap(layoutManager, it)
-                    if (snapDistance!![0] != 0 || snapDistance[1] != 0) {
+                    if (snapDistance[0] != 0 || snapDistance[1] != 0) {
                         recyclerView.scrollBy(snapDistance[0], snapDistance[1])
                     }
                 }
