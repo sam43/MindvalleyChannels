@@ -13,9 +13,7 @@ import com.sam43.mindvalleychannels.ui.adapters.ParentAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ScrollStateHolder
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.ViewType
 import com.sam43.mindvalleychannels.ui.model.TitledList
-import com.sam43.mindvalleychannels.utils.AppConstants
 import com.sam43.mindvalleychannels.utils.AppConstants.TAG
-import com.sam43.mindvalleychannels.utils.parser.JsonParser
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 
