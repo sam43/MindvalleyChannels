@@ -6,6 +6,11 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
+// Reading data from secret
+def secretFile = rootProject.file("secret.properties")
+def secretProperty = new Properties()
+secretProperty.load(new FileInputStream(secretFile))
+
 android {
     compileSdk 32
 
@@ -16,7 +21,10 @@ android {
         versionCode 1
         versionName "1.0"
 
-        //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", secretProperty['BASE_URL'])
+        buildConfigField("String", "ROUTE_NEW_EPISODES", secretProperty['NEW_EPISODES'])
+        buildConfigField("String", "ROUTE_CHANNELS", secretProperty['CHANNELS'])
+        buildConfigField("String", "ROUTE_CATEGORIES", secretProperty['CATEGORIES'])
         // Create own/custom application suite for HiltProject
         testInstrumentationRunner "com.sam43.mindvalleychannels.HiltTestRunner"
     }
@@ -71,6 +79,13 @@ dependencies {
 
     // Gson only
     implementation 'com.google.code.gson:gson:2.9.0'
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_log_intercepter"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_log_intercepter"
+    implementation "com.localebro:okhttpprofiler:$okhttp_profile_intercepter"
 
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
