@@ -32,6 +32,7 @@ class MainFragment : Fragment() {
     private lateinit var adapter: ParentAdapter
     private lateinit var scrollStateHolder: ScrollStateHolder
     private val viewModel: MainViewModel by viewModels()
+    private val lists = arrayListOf<TitledList>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -109,7 +110,6 @@ class MainFragment : Fragment() {
 
     private fun loadItems() {
         viewModel.consumeRemoteChannels()
-        val lists = arrayListOf<TitledList>()
         repeat(3) { listIndex ->
             val items = mutableListOf<String>()
             repeat(10) { itemIndex -> items.add(itemIndex.toString()) }

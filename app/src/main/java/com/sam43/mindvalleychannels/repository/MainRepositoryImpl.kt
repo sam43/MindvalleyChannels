@@ -13,6 +13,8 @@ import com.sam43.mindvalleychannels.utils.AppConstants.TAG
 import com.sam43.mindvalleychannels.utils.parser.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class MainRepositoryImpl @Inject constructor(private val api: Api) : MainRepository {
@@ -25,17 +27,13 @@ class MainRepositoryImpl @Inject constructor(private val api: Api) : MainReposit
 
     override fun getChannelsData(): Flow<Resource<Channel>> = flow {
         val channelsInfo = api.consumeResponseData(BuildConfig.ROUTE_CHANNELS)
-        //val abc = api.consumePlaceholderData()
-        Log.d(TAG, "getChannelsData() called response : ${channelsInfo.body().toString()}")
     }
 
     override fun getCategoriesData(): Flow<Resource<Category>> = flow {
-
         val categoryInfo = api.consumeResponseData(BuildConfig.ROUTE_CATEGORIES)
     }
 
     override fun getMediaData(): Flow<Resource<Media>> = flow {
-
         val newEpisodesInfo = api.consumeResponseData(BuildConfig.ROUTE_NEW_EPISODES)
     }
 }

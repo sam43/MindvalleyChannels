@@ -13,5 +13,4 @@ interface ChannelsDao {
 
     @Query("SELECT * FROM channels")
     suspend fun getChannelsOffline(): ChannelsEntity
-
 }
