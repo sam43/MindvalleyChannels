@@ -26,7 +26,12 @@ object AppConstants {
             this as List<T> else
             null
 
-    inline fun <reified T> MutableList<*>.isListOfType(): Boolean =
+    inline fun <reified T> List<*>.isListOfType(): Boolean =
+        if (all { it is T })
+            @Suppress("UNCHECKED_CAST")
+            true else false
+
+    inline fun <reified T> MutableList<*>.isMutableListOfType(): Boolean =
         if (all { it is T })
             @Suppress("UNCHECKED_CAST")
             true else false

@@ -86,6 +86,7 @@ class MainFragment : Fragment() {
                 items.toMutableList()
             ))
         }
+        Log.d(TAG, "loadItems() called: $lists")
         adapter.setItems(lists)
     }
 
