@@ -24,12 +24,18 @@ class MainRepositoryImpl @Inject constructor(private val api: Api) : MainReposit
     lateinit var mediaDao: MediaDao
 
     override fun getChannelsData(): Flow<Resource<Channel>> = flow {
-        val abc = api.consumeResponseData(BuildConfig.ROUTE_CHANNELS)
+        val channelsInfo = api.consumeResponseData(BuildConfig.ROUTE_CHANNELS)
         //val abc = api.consumePlaceholderData()
-        Log.d(TAG, "getChannelsData() called response : ${abc.body().toString()}")
+        Log.d(TAG, "getChannelsData() called response : ${channelsInfo.body().toString()}")
     }
 
-    override fun getCategoriesData(): Flow<Resource<Category>> = flow {  }
+    override fun getCategoriesData(): Flow<Resource<Category>> = flow {
 
-    override fun getMediaData(): Flow<Resource<Media>> = flow {  }
+        val categoryInfo = api.consumeResponseData(BuildConfig.ROUTE_CATEGORIES)
+    }
+
+    override fun getMediaData(): Flow<Resource<Media>> = flow {
+
+        val newEpisodesInfo = api.consumeResponseData(BuildConfig.ROUTE_NEW_EPISODES)
+    }
 }
