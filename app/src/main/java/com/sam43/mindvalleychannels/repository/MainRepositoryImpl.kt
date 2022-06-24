@@ -24,8 +24,8 @@ class MainRepositoryImpl @Inject constructor(private val api: Api) : MainReposit
     lateinit var mediaDao: MediaDao
 
     override fun getChannelsData(): Flow<Resource<Channel>> = flow {
-        //val abc = api.consumeResponseData(BuildConfig.ROUTE_CHANNELS)
-        val abc = api.consumePlaceholderData()
+        val abc = api.consumeResponseData(BuildConfig.ROUTE_CHANNELS)
+        //val abc = api.consumePlaceholderData()
         Log.d(TAG, "getChannelsData() called response : ${abc.body().toString()}")
     }
 

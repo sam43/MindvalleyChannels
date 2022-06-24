@@ -21,6 +21,10 @@ class MainViewModel @Inject constructor(
 
     private val _channels = MutableStateFlow<ResponseEvent>(ResponseEvent.Loading)
     val channels: StateFlow<ResponseEvent> = _channels
+    private val _newEpisodes = MutableStateFlow<ResponseEvent>(ResponseEvent.Loading)
+    val newEpisodes: StateFlow<ResponseEvent> = _newEpisodes
+    private val _categories = MutableStateFlow<ResponseEvent>(ResponseEvent.Loading)
+    val categories: StateFlow<ResponseEvent> = _categories
 
     fun consumeRemoteChannels() {
         _channels.value = ResponseEvent.Loading
@@ -40,20 +44,37 @@ class MainViewModel @Inject constructor(
                 }.launchIn(this)
         }
     }
-
-    fun consumeRemotePlaceholders() {
-        _channels.value = ResponseEvent.Loading
+    fun consumeRemoteNewEpisodes() {
+        _newEpisodes.value = ResponseEvent.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getChannelsData()
+            repository.getMediaData()
                 .onEach { response ->
                     when (response) {
-                        is Resource.Loading -> _channels.value =
+                        is Resource.Loading -> _newEpisodes.value =
                             ResponseEvent.Loading
-                        is Resource.NoInternet -> _channels.value =
+                        is Resource.NoInternet -> _newEpisodes.value =
                             ResponseEvent.ConnectionFailure(response.message!!)
-                        is Resource.Error -> _channels.value =
+                        is Resource.Error -> _newEpisodes.value =
                             ResponseEvent.Failure(response.message!!)
-                        is Resource.Success -> _channels.value =
+                        is Resource.Success -> _newEpisodes.value =
+                            ResponseEvent.SuccessResponse(response.data)
+                    }
+                }.launchIn(this)
+        }
+    }
+    fun consumeRemoteCategories() {
+        _categories.value = ResponseEvent.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getCategoriesData()
+                .onEach { response ->
+                    when (response) {
+                        is Resource.Loading -> _categories.value =
+                            ResponseEvent.Loading
+                        is Resource.NoInternet -> _categories.value =
+                            ResponseEvent.ConnectionFailure(response.message!!)
+                        is Resource.Error -> _categories.value =
+                            ResponseEvent.Failure(response.message!!)
+                        is Resource.Success -> _categories.value =
                             ResponseEvent.SuccessResponse(response.data)
                     }
                 }.launchIn(this)

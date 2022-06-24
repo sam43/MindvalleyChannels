@@ -21,7 +21,6 @@ import com.sam43.mindvalleychannels.ui.model.TitledList
 import com.sam43.mindvalleychannels.utils.AppConstants.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import org.json.JSONObject
 
 
 @AndroidEntryPoint
@@ -69,6 +68,38 @@ class MainFragment : Fragment() {
                 }
             }
         }
+        lifecycleScope.launchWhenStarted {
+            viewModel.newEpisodes.collectLatest { event ->
+                when (event) {
+                    is ResponseEvent.SuccessResponse<*> -> {
+                        Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
+                    }
+                    is ResponseEvent.ConnectionFailure -> whenFailedConnection(event)
+                    is ResponseEvent.Failure -> whenFailed(event)
+                    is ResponseEvent.Loading -> whenLoading(event)
+                    else -> Log.d(
+                        TAG,
+                        "onCreate() called with: event = $event"
+                    )
+                }
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.categories.collectLatest { event ->
+                when (event) {
+                    is ResponseEvent.SuccessResponse<*> -> {
+                        Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
+                    }
+                    is ResponseEvent.ConnectionFailure -> whenFailedConnection(event)
+                    is ResponseEvent.Failure -> whenFailed(event)
+                    is ResponseEvent.Loading -> whenLoading(event)
+                    else -> Log.d(
+                        TAG,
+                        "onCreate() called with: event = $event"
+                    )
+                }
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -89,5 +120,4 @@ class MainFragment : Fragment() {
         Log.d(TAG, "loadItems() called: $lists")
         adapter.setItems(lists)
     }
-
 }

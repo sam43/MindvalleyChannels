@@ -59,8 +59,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideCurrencyApi(okHttpClient: OkHttpClient): Api = Retrofit.Builder()
-        //.baseUrl(BuildConfig.BASE_URL)
-        .baseUrl(BuildConfig.PLACEHOLDER_BASE)
+        .baseUrl(BuildConfig.BASE_URL)
+        //.baseUrl(BuildConfig.PLACEHOLDER_BASE)
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()

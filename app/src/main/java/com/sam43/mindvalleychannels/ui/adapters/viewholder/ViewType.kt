@@ -3,8 +3,8 @@ package com.sam43.mindvalleychannels.ui.adapters.viewholder
 import java.util.*
 
 enum class ViewType(var type: String) {
-    SERIES("SERIES"),
     COURSE("COURSE"),
+    SERIES("SERIES"),
     CATEGORY("CATEGORY")
 }
 val answers: Array<ViewType> = ViewType.values()
