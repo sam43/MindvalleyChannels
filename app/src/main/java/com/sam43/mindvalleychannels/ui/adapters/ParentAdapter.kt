@@ -1,33 +1,41 @@
 package com.sam43.mindvalleychannels.ui.adapters
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
-import com.sam43.mindvalleychannels.R
+import com.sam43.mindvalleychannels.data.remote.objects.Category
+import com.sam43.mindvalleychannels.data.remote.objects.Channel
+import com.sam43.mindvalleychannels.data.remote.objects.Media
+import com.sam43.mindvalleychannels.databinding.ItemParentDataBinding
+import com.sam43.mindvalleychannels.ui.model.TitledList
+import com.sam43.mindvalleychannels.utils.AppConstants.TAG
+import com.sam43.mindvalleychannels.utils.AppConstants.isListOfType
 
 @SuppressLint("NotifyDataSetChanged")
 class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
     RecyclerView.Adapter<ParentAdapter.VH>() {
+    private var items = listOf<TitledList>()
 
-    private var items = listOf<Any>()
-
-    fun setItems(list: List<Any>) {
+    fun setItems(list: List<TitledList>) {
         this.items = list
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val view = LayoutInflater.from(parent.context).inflate(
-            R.layout.item_parent_data,
-            parent, false
+        val vh = VH(
+            ItemParentDataBinding.inflate(
+                LayoutInflater.from(
+                    parent.context
+                ), parent, false
+            ), scrollStateHolder
         )
-        val vh = VH(view, scrollStateHolder)
         vh.onCreated()
         return vh
     }
@@ -35,7 +43,7 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.onBound(items[position])
+        holder.onBound(items, position)
     }
 
     override fun onViewRecycled(holder: VH) {
@@ -48,40 +56,62 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
         holder.onDetachedFromWindow()
     }
 
-    class VH(view: View, private val scrollStateHolder: ScrollStateHolder) :
-        RecyclerView.ViewHolder(view), ScrollStateHolder.ScrollStateKeyProvider {
-
-        private val titleTextView: TextView = view.findViewById(R.id.nestedTitleTextView)
-        private val recyclerView: RecyclerView = view.findViewById(R.id.nestedRecyclerView)
+    class VH(
+        private val binding: ItemParentDataBinding,
+        private val scrollStateHolder: ScrollStateHolder
+    ) :
+        RecyclerView.ViewHolder(binding.root), ScrollStateHolder.ScrollStateKeyProvider {
         private val layoutManager = LinearLayoutManager(
-            view.context,
-            RecyclerView.HORIZONTAL, false
-        )
+                binding.root.context,
+                RecyclerView.HORIZONTAL, false
+            )
+
         private val adapter = ChildAdapter()
         private val snapHelper = GravitySnapHelper(Gravity.START)
-        private var currentItem: Any? = null
+        private var currentItem: TitledList? = null
 
-        override fun getScrollStateKey(): String? = "" //currentItem?.title
+        override fun getScrollStateKey(): String? = currentItem?.title
 
         fun onCreated() {
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = layoutManager
-            recyclerView.setHasFixedSize(true)
-            recyclerView.itemAnimator?.changeDuration = 0
-            snapHelper.attachToRecyclerView(recyclerView)
-            scrollStateHolder.setupRecyclerView(recyclerView, this)
+            binding.nestedRecyclerView.adapter = adapter
+            binding.nestedRecyclerView.layoutManager = layoutManager
+            binding.nestedRecyclerView.setHasFixedSize(true)
+            binding.nestedRecyclerView.itemAnimator?.changeDuration = 0
+            snapHelper.attachToRecyclerView(binding.nestedRecyclerView)
+            scrollStateHolder.setupRecyclerView(binding.nestedRecyclerView, this)
         }
 
-        fun onBound(item: Any) {
-            currentItem = item
+        @Suppress("UNCHECKED_CAST")
+        fun onBound(items: List<TitledList>, position: Int) {
+            currentItem = items[position]
+            binding.divider.isVisible = position != items.size - 1
+            binding.nestedTitleTextView.text = currentItem?.title
             // conditional check on the item type
-//            titleTextView.text = item.title
-//            adapter.setItems(item.texts)
-            scrollStateHolder.restoreScrollState(recyclerView, this)
+            when {
+                currentItem?.list?.isListOfType<Media>() == true -> {
+                    adapter.setItems(currentItem?.list as List<Media>, currentItem?.type.toString())
+                    Log.d(TAG, "onBound() called with: NewEpisodeItem = $currentItem")
+                }
+                currentItem?.list?.isListOfType<Channel>() == true -> {
+                    adapter.setItems(currentItem?.list as List<Channel>, currentItem?.type.toString())
+                    Log.d(TAG, "onBound() called with: ChannelItem = $currentItem")
+                }
+                currentItem?.list?.isListOfType<Category>() == true -> {
+                    adapter.setItems(currentItem?.list as List<Category>,
+                        currentItem?.type.toString()
+                    )
+                    Log.d(TAG, "onBound() called with: CategoryItem = $currentItem")
+                }
+                else -> {
+                    adapter.setItems(currentItem?.list as List<String>, currentItem?.type.toString())
+                    Log.d(TAG, "onBound() called with: StringType = $currentItem")
+                }
+            }
+            scrollStateHolder.restoreScrollState(binding.nestedRecyclerView, this)
         }
 
         fun onRecycled() {
-            scrollStateHolder.saveScrollState(recyclerView, this)
+            scrollStateHolder.saveScrollState(binding.nestedRecyclerView, this)
             currentItem = null
         }
 
@@ -92,11 +122,11 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
          * To fix that, we snap again without smooth scrolling.
          */
         fun onDetachedFromWindow() {
-            if (recyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE) {
+            if (binding.nestedRecyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE) {
                 snapHelper.findSnapView(layoutManager)?.let {
                     val snapDistance = snapHelper.calculateDistanceToFinalSnap(layoutManager, it)
                     if (snapDistance[0] != 0 || snapDistance[1] != 0) {
-                        recyclerView.scrollBy(snapDistance[0], snapDistance[1])
+                        binding.nestedRecyclerView.scrollBy(snapDistance[0], snapDistance[1])
                     }
                 }
             }

@@ -25,13 +25,13 @@
         android:layout_marginTop="@dimen/space_16"
         android:layout_marginBottom="@dimen/space_16"
         android:paddingBottom="@dimen/default_margin"
-        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="@+id/nestedTitleTextView"
         app:layout_constraintStart_toStartOf="@+id/nestedTitleTextView"
         app:layout_constraintTop_toBottomOf="@+id/nestedTitleTextView" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="@dimen/space_8"
