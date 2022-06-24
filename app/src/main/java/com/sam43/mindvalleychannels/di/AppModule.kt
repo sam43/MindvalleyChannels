@@ -52,14 +52,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRepository() : MainRepository = MainRepositoryImpl()
+    fun provideRepository(api: Api) : MainRepository = MainRepositoryImpl(api)
 
 
 
     @Singleton
     @Provides
     fun provideCurrencyApi(okHttpClient: OkHttpClient): Api = Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
+        //.baseUrl(BuildConfig.BASE_URL)
+        .baseUrl(BuildConfig.PLACEHOLDER_BASE)
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()

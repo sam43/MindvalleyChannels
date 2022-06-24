@@ -22,6 +22,7 @@ android {
         versionName "1.0"
 
         buildConfigField("String", "BASE_URL", secretProperty['BASE_URL'])
+        buildConfigField("String", "PLACEHOLDER_BASE", secretProperty['PLACEHOLDER_BASE'])
         buildConfigField("String", "ROUTE_NEW_EPISODES", secretProperty['NEW_EPISODES'])
         buildConfigField("String", "ROUTE_CHANNELS", secretProperty['CHANNELS'])
         buildConfigField("String", "ROUTE_CATEGORIES", secretProperty['CATEGORIES'])
@@ -76,9 +77,6 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-
-    // Gson only
-    implementation 'com.google.code.gson:gson:2.9.0'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
