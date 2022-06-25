@@ -4,6 +4,7 @@ import androidx.core.view.isVisible
 import com.sam43.mindvalleychannels.data.remote.common.LatestMedia
 import com.sam43.mindvalleychannels.data.remote.common.Sery
 import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
+import com.sam43.mindvalleychannels.data.remote.objects.Media
 import com.sam43.mindvalleychannels.databinding.ItemChildDataLandscapeBinding
 import com.sam43.mindvalleychannels.utils.loadImage
 
@@ -25,6 +26,12 @@ class LandscapeViewHolder(
             is Sery -> {
                 binding.tvSubInfo.isVisible = false
                 binding.tvInfo.text = item.title
+                loadImage(binding.imgCover, item.coverAsset.url)
+            }
+            is Media -> {
+                binding.tvSubInfo.isVisible = true
+                binding.tvInfo.text = item.title
+                binding.tvSubInfo.text = item.channel.title
                 loadImage(binding.imgCover, item.coverAsset.url)
             }
             else -> {

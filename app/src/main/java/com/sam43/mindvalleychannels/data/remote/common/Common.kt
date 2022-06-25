@@ -12,9 +12,7 @@ data class CoverAsset(
 @Keep
 data class IconAsset(
     @SerializedName("thumbnailUrl")
-    val thumbnailUrl: String,
-    @SerializedName("url")
-    val url: String
+    val thumbnailUrl: String
 )
 
 @Keep

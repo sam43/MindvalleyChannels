@@ -30,6 +30,12 @@ class PortraitViewHolder(
                 binding.tvInfo.text = item.title
                 loadImage(binding.imgCover, item.coverAsset.url)
             }
+            is Media -> {
+                binding.tvSubInfo.isVisible = true
+                binding.tvInfo.text = item.title
+                binding.tvSubInfo.text = item.channel.title
+                loadImage(binding.imgCover, item.coverAsset.url)
+            }
             else -> {
 //                val list = arrayListOf(item)
 //                list.forEach {

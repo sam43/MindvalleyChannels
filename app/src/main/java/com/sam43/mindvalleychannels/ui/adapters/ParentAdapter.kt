@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
+import com.sam43.mindvalleychannels.R
 import com.sam43.mindvalleychannels.data.remote.common.LatestMedia
 import com.sam43.mindvalleychannels.data.remote.common.Sery
+import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
 import com.sam43.mindvalleychannels.databinding.ItemParentDataBinding
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.ViewType
 import com.sam43.mindvalleychannels.ui.model.TitledList
@@ -19,7 +21,9 @@ import com.sam43.mindvalleychannels.utils.AppConstants.TAG
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_GRID_CATEGORY
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_RAIL_LANDSCAPE
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_RAIL_PORTRAIT
+import com.sam43.mindvalleychannels.utils.AppConstants.isListOfType
 import com.sam43.mindvalleychannels.utils.AppConstants.isMutableListOfType
+import com.sam43.mindvalleychannels.utils.loadImage
 
 @SuppressLint("NotifyDataSetChanged")
 class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
@@ -102,7 +106,7 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
             binding.nestedRecyclerView.adapter = adapter
             binding.nestedRecyclerView.layoutManager = layoutManager
             binding.nestedRecyclerView.setHasFixedSize(true)
-            binding.nestedRecyclerView.itemAnimator?.changeDuration = 200L
+            binding.nestedRecyclerView.itemAnimator?.changeDuration = 0
             snapHelper.attachToRecyclerView(binding.nestedRecyclerView)
             scrollStateHolder.setupRecyclerView(binding.nestedRecyclerView, this)
         }
@@ -110,8 +114,10 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
         @Suppress("UNCHECKED_CAST")
         fun onBound(items: List<TitledList>, position: Int) {
             currentItem = items[position]
-            binding.divider.isVisible = position != items.size - 1
+            //binding.divider.isVisible = position != items.size - 1
+            binding.tvMediaCount.text = currentItem?.mediaCount.plus(" Episodes")
             binding.nestedTitleTextView.text = currentItem?.title
+            currentItem?.icon?.let { loadImage(binding.ivChannelIcon, it.thumbnailUrl, R.drawable.ic_icon_asset_circular) }
             // conditional check on the item type
             when {
                 currentItem?.list?.isMutableListOfType<LatestMedia>() == true -> {
