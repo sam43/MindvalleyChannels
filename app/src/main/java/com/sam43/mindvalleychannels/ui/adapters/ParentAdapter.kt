@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
-import com.sam43.mindvalleychannels.data.remote.objects.Category
-import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
-import com.sam43.mindvalleychannels.data.remote.objects.Media
+import com.sam43.mindvalleychannels.data.remote.common.LatestMedia
+import com.sam43.mindvalleychannels.data.remote.common.Sery
 import com.sam43.mindvalleychannels.databinding.ItemParentDataBinding
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.ViewType
 import com.sam43.mindvalleychannels.ui.model.TitledList
@@ -34,14 +33,13 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val vh = VH(
+        return VH(
             ItemParentDataBinding.inflate(
                 LayoutInflater.from(
                     parent.context
                 ), parent, false
             ), scrollStateHolder
         )
-        return vh
     }
 
     private fun setLayoutType(vh: VH, position: Int) {
@@ -104,7 +102,7 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
             binding.nestedRecyclerView.adapter = adapter
             binding.nestedRecyclerView.layoutManager = layoutManager
             binding.nestedRecyclerView.setHasFixedSize(true)
-            binding.nestedRecyclerView.itemAnimator?.changeDuration = 0
+            binding.nestedRecyclerView.itemAnimator?.changeDuration = 200L
             snapHelper.attachToRecyclerView(binding.nestedRecyclerView)
             scrollStateHolder.setupRecyclerView(binding.nestedRecyclerView, this)
         }
@@ -116,25 +114,17 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
             binding.nestedTitleTextView.text = currentItem?.title
             // conditional check on the item type
             when {
-                currentItem?.list?.isMutableListOfType<Media>() == true -> {
-                    adapter.setItems(currentItem?.list as List<Media>, currentItem?.type.toString())
+                currentItem?.list?.isMutableListOfType<LatestMedia>() == true -> {
+                    adapter.setItems(currentItem?.list as List<LatestMedia>, currentItem?.type.toString())
                     Log.d(TAG, "onBound() called with: NewEpisodeItem = $currentItem")
                 }
-                currentItem?.list?.isMutableListOfType<ChannelsItem>() == true -> {
+                currentItem?.list?.isMutableListOfType<Sery>() == true -> {
                     adapter.setItems(
-                        currentItem?.list as List<ChannelsItem>,
+                        currentItem?.list as List<Sery>,
                         currentItem?.type.toString()
                     )
                     Log.d(TAG, "onBound() called with: ChannelItem = $currentItem")
-                }
-                currentItem?.list?.isMutableListOfType<Category>() == true -> {
-                    adapter.setItems(
-                        currentItem?.list as List<Category>,
-                        currentItem?.type.toString()
-                    )
-                    Log.d(TAG, "onBound() called with: CategoryItem = $currentItem")
-                }
-                else -> {
+                } else -> {
                     adapter.setItems(
                         currentItem?.list as List<String>,
                         currentItem?.type.toString()
