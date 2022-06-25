@@ -1,6 +1,7 @@
 package com.sam43.mindvalleychannels.ui.adapters
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,6 +9,7 @@ import com.sam43.mindvalleychannels.databinding.ItemChildDataCategoryBinding
 import com.sam43.mindvalleychannels.databinding.ItemChildDataLandscapeBinding
 import com.sam43.mindvalleychannels.databinding.ItemChildDataPortraitBinding
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.*
+import com.sam43.mindvalleychannels.utils.AppConstants.TAG
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_GRID_CATEGORY
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_RAIL_LANDSCAPE
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_RAIL_PORTRAIT
@@ -43,7 +45,7 @@ class ChildAdapter: RecyclerView.Adapter<BaseViewHolder<Any>>() {
                             parent.context
                         ), parent, false
                     )
-                ) as BaseViewHolder<Any>
+                )
             TYPE_GRID_CATEGORY ->
                 CategoryViewHolder(
                     ItemChildDataCategoryBinding.inflate(
@@ -51,7 +53,7 @@ class ChildAdapter: RecyclerView.Adapter<BaseViewHolder<Any>>() {
                             parent.context
                         ), parent, false
                     )
-                ) as BaseViewHolder<Any>
+                )
             else ->
                 throw IllegalArgumentException("Invalid view type")
         }
@@ -64,7 +66,7 @@ class ChildAdapter: RecyclerView.Adapter<BaseViewHolder<Any>>() {
             ViewType.SERIES.name -> TYPE_RAIL_LANDSCAPE
             ViewType.COURSE.name -> TYPE_RAIL_PORTRAIT
             ViewType.CATEGORY.name -> TYPE_GRID_CATEGORY
-            else -> TYPE_RAIL_PORTRAIT
+            else -> Log.d(TAG, "getItemViewType() called with: position = $position")
         }
         return currentBindViewType
     }
