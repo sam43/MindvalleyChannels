@@ -1,8 +1,11 @@
 package com.sam43.mindvalleychannels.ui.adapters.viewholder
 
-import com.sam43.mindvalleychannels.data.remote.objects.Channel
+import com.bumptech.glide.Glide
+import com.sam43.mindvalleychannels.R
+import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
 import com.sam43.mindvalleychannels.data.remote.objects.Media
 import com.sam43.mindvalleychannels.databinding.ItemChildDataPortraitBinding
+import com.sam43.mindvalleychannels.utils.loadImage
 
 class PortraitViewHolder(
     private val binding: ItemChildDataPortraitBinding
@@ -14,9 +17,10 @@ class PortraitViewHolder(
         binding: ItemChildDataPortraitBinding
     ) {
         when (item) {
-            is Channel -> {
+            is ChannelsItem -> {
                 binding.tvInfo.text = item.title
                 binding.tvSubInfo.text = item.slug
+                loadImage(binding.imgCover, item.coverAsset.url)
             }
             is Media -> {
                 binding.tvInfo.text = item.title

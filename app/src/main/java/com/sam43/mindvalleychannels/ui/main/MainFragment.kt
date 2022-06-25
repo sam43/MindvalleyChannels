@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenFailed
 import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenFailedConnection
 import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenLoading
+import com.sam43.mindvalleychannels.data.remote.ResponseData
 import com.sam43.mindvalleychannels.data.remote.ResponseEvent
+import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
 import com.sam43.mindvalleychannels.databinding.MainFragmentBinding
 import com.sam43.mindvalleychannels.ui.adapters.ParentAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ScrollStateHolder
@@ -58,6 +60,14 @@ class MainFragment : Fragment() {
                 when (event) {
                     is ResponseEvent.SuccessResponse<*> -> {
                         Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
+                        val responseEvent = event.response as ResponseData
+                        val list = responseEvent.response.channelsItems
+                        list.forEach {
+                            lists.add(TitledList(it.title, getViewType(it),
+                                getDefinedList(it)
+                            ))
+                        }
+                        adapter.setItems(lists)
                     }
                     is ResponseEvent.ConnectionFailure -> whenFailedConnection(event)
                     is ResponseEvent.Failure -> whenFailed(event)
@@ -103,6 +113,18 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun getDefinedList(it: ChannelsItem): MutableList<Any> =
+        when {
+            it.series.isNullOrEmpty() -> it.latestMedia.toMutableList()
+            else -> it.series.toMutableList()
+        }
+
+    private fun getViewType(it: ChannelsItem): String =
+        when {
+            it.series.isNullOrEmpty() -> ViewType.COURSE.type
+            else -> ViewType.SERIES.type
+        }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         scrollStateHolder.onSaveInstanceState(outState)
@@ -110,14 +132,16 @@ class MainFragment : Fragment() {
 
     private fun loadItems() {
         viewModel.consumeRemoteChannels()
-        repeat(3) { listIndex ->
-            val items = mutableListOf<String>()
-            repeat(10) { itemIndex -> items.add(itemIndex.toString()) }
-            lists.add(TitledList("List number $listIndex", ViewType.values()[listIndex].type,
-                items.toMutableList()
-            ))
-        }
-        Log.d(TAG, "loadItems() called: $lists")
+        viewModel.consumeRemoteNewEpisodes()
+        viewModel.consumeRemoteCategories()
+//        repeat(3) { listIndex ->
+//            val items = mutableListOf<String>()
+//            repeat(10) { itemIndex -> items.add(itemIndex.toString()) }
+//            lists.add(TitledList("List number $listIndex", ViewType.values()[listIndex].type,
+//                items.toMutableList()
+//            ))
+//        }
+//        Log.d(TAG, "loadItems() called: $lists")
         adapter.setItems(lists)
     }
 }

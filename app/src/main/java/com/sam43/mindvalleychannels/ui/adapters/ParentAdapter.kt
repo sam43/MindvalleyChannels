@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import com.sam43.mindvalleychannels.data.remote.objects.Category
-import com.sam43.mindvalleychannels.data.remote.objects.Channel
+import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
 import com.sam43.mindvalleychannels.data.remote.objects.Media
 import com.sam43.mindvalleychannels.databinding.ItemParentDataBinding
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.ViewType
@@ -120,9 +120,9 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
                     adapter.setItems(currentItem?.list as List<Media>, currentItem?.type.toString())
                     Log.d(TAG, "onBound() called with: NewEpisodeItem = $currentItem")
                 }
-                currentItem?.list?.isMutableListOfType<Channel>() == true -> {
+                currentItem?.list?.isMutableListOfType<ChannelsItem>() == true -> {
                     adapter.setItems(
-                        currentItem?.list as List<Channel>,
+                        currentItem?.list as List<ChannelsItem>,
                         currentItem?.type.toString()
                     )
                     Log.d(TAG, "onBound() called with: ChannelItem = $currentItem")
