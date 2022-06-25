@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_margin"
     android:orientation="vertical">
 
     <TextView
@@ -14,7 +13,7 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/sp_25"
         android:textStyle="bold"
-        android:paddingStart="@dimen/space_12"
+        android:paddingStart="@dimen/space_14"
         android:paddingEnd="@dimen/default_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivChannelIcon"
@@ -29,7 +28,7 @@
         android:textColor="@color/subTitle"
         android:textSize="@dimen/sp_17"
         android:textStyle="bold"
-        android:paddingStart="@dimen/space_12"
+        android:paddingStart="@dimen/space_14"
         android:paddingEnd="@dimen/default_margin"
         app:layout_constraintEnd_toEndOf="@+id/nestedTitleTextView"
         app:layout_constraintStart_toStartOf="@+id/nestedTitleTextView"
@@ -62,7 +61,7 @@
         android:id="@+id/ivChannelIcon"
         android:layout_width="@dimen/space_50"
         android:layout_height="@dimen/space_50"
-        android:layout_margin="@dimen/default_margin"
+        android:layout_margin="@dimen/space_8"
         app:layout_constraintBottom_toBottomOf="@+id/tvMediaCount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/nestedTitleTextView"
