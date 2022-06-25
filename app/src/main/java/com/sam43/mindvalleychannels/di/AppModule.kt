@@ -54,8 +54,6 @@ object AppModule {
     @Singleton
     fun provideRepository(api: Api) : MainRepository = MainRepositoryImpl(api)
 
-
-
     @Singleton
     @Provides
     fun provideCurrencyApi(okHttpClient: OkHttpClient): Api = Retrofit.Builder()

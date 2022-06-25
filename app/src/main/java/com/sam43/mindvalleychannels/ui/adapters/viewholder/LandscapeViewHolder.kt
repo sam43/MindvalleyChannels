@@ -1,7 +1,8 @@
 package com.sam43.mindvalleychannels.ui.adapters.viewholder
 
-import com.sam43.mindvalleychannels.data.remote.objects.Channel
+import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
 import com.sam43.mindvalleychannels.databinding.ItemChildDataLandscapeBinding
+import com.sam43.mindvalleychannels.utils.loadImage
 
 class LandscapeViewHolder(
     private val binding: ItemChildDataLandscapeBinding
@@ -13,9 +14,10 @@ class LandscapeViewHolder(
         binding: ItemChildDataLandscapeBinding
     ) {
         when (item) {
-            is Channel -> {
+            is ChannelsItem -> {
                 binding.tvInfo.text = item.title
                 binding.tvSubInfo.text = item.slug
+                loadImage(binding.imgCover, item.coverAsset.url)
             }
             else -> {
                 val list = arrayListOf(item)

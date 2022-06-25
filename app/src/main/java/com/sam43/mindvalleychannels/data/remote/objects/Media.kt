@@ -17,3 +17,9 @@ data class Media(
     val type: String
 )
 
+@Keep
+data class Channel(
+    @SerializedName("title")
+    val title: String
+)
+
