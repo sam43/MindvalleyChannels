@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">MindValley</string>
     <string name="label_channels">Channels</string>
+    <string name="label_episodes">New Episodes</string>
+    <string name="label_categories">Browse by Category</string>
 </resources>

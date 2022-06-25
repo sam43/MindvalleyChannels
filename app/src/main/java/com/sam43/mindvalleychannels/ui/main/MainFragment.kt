@@ -2,20 +2,28 @@ package com.sam43.mindvalleychannels.ui.main
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
+import com.sam43.mindvalleychannels.R
 import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenFailed
 import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenFailedConnection
 import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenLoading
 import com.sam43.mindvalleychannels.data.remote.ResponseData
 import com.sam43.mindvalleychannels.data.remote.ResponseEvent
 import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
+import com.sam43.mindvalleychannels.data.remote.objects.Media
 import com.sam43.mindvalleychannels.databinding.MainFragmentBinding
+import com.sam43.mindvalleychannels.ui.adapters.ChildAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ParentAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ScrollStateHolder
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.ViewType
@@ -30,11 +38,14 @@ class MainFragment : Fragment() {
     companion object {
         fun newInstance() = MainFragment()
     }
+
+    private val snapHelper: GravitySnapHelper by lazy { GravitySnapHelper(Gravity.START) }
     private lateinit var binding: MainFragmentBinding
-    private lateinit var adapter: ParentAdapter
+    private lateinit var parentAdapter: ParentAdapter
+    private lateinit var episodeAdapter: ChildAdapter
+    private lateinit var categoryAdapter: ChildAdapter
     private lateinit var scrollStateHolder: ScrollStateHolder
     private val viewModel: MainViewModel by viewModels()
-    private val lists = arrayListOf<TitledList>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,10 +59,37 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
         scrollStateHolder = ScrollStateHolder(savedInstanceState)
-        adapter = ParentAdapter(scrollStateHolder)
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        setupParentAdapter()
+        setupSingleAdapter()
         loadItems()
+    }
+
+    private fun setupParentAdapter() {
+        parentAdapter = ParentAdapter(scrollStateHolder)
+        binding.rvChannels.adapter = parentAdapter
+        binding.rvChannels.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    private fun setupSingleAdapter() {
+        // New Episode Linear Adapter
+        episodeAdapter = ChildAdapter()
+        binding.contentEpisode.rvEpisodes.adapter = episodeAdapter
+        binding.contentEpisode.rvEpisodes.layoutManager = LinearLayoutManager(
+            binding.root.context,
+            RecyclerView.HORIZONTAL, false
+        )
+        binding.contentEpisode.rvEpisodes.setHasFixedSize(true)
+        binding.contentEpisode.rvEpisodes.itemAnimator?.changeDuration = 0
+        snapHelper.attachToRecyclerView(binding.contentEpisode.rvEpisodes)
+
+        // Category Grid Adapter
+        categoryAdapter = ChildAdapter()
+        binding.contentCategory.rvCategories.adapter = categoryAdapter
+        binding.contentCategory.rvCategories.layoutManager = GridLayoutManager(
+            binding.root.context, 2,
+            RecyclerView.VERTICAL, false
+        )
+        binding.contentCategory.rvCategories.setHasFixedSize(true)
     }
 
     private fun initObservers() {
@@ -59,19 +97,18 @@ class MainFragment : Fragment() {
             viewModel.channels.collectLatest { event ->
                 when (event) {
                     is ResponseEvent.SuccessResponse<*> -> {
+                        binding.main.isVisible = true
                         Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
                         val responseEvent = event.response as ResponseData
-                        val list = responseEvent.response.channelsItems
-                        list.forEach {
-                            lists.add(TitledList(it.title, getViewType(it),
-                                getDefinedList(it)
-                            ))
+                        val lists = arrayListOf<TitledList>()
+                        responseEvent.response.channelsItems.forEach {
+                            lists.add(TitledList(it.title, getViewType(it), it.mediaCount.toString(), it.iconAsset, getDefinedList(it)))
                         }
-                        adapter.setItems(lists)
+                        parentAdapter.setItems(lists)
                     }
-                    is ResponseEvent.ConnectionFailure -> whenFailedConnection(event)
-                    is ResponseEvent.Failure -> whenFailed(event)
-                    is ResponseEvent.Loading -> whenLoading(event)
+                    is ResponseEvent.ConnectionFailure -> requireActivity().whenFailedConnection(event)
+                    is ResponseEvent.Failure -> requireActivity().whenFailed(event)
+                    is ResponseEvent.Loading -> requireActivity().whenLoading(event)
                     else -> Log.d(
                         TAG,
                         "onCreate() called with: event = $event"
@@ -83,11 +120,16 @@ class MainFragment : Fragment() {
             viewModel.newEpisodes.collectLatest { event ->
                 when (event) {
                     is ResponseEvent.SuccessResponse<*> -> {
-                        Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
+                        binding.main.isVisible = true
+                        val responseEvent = event.response as ResponseData
+                        binding.contentEpisode.tvTitle.text = getString(R.string.label_episodes)
+                        val list = responseEvent.response.media
+                        Log.d(TAG, "initObservers() called with: media list = $list")
+                        episodeAdapter.setItems(list, ViewType.COURSE.type)
                     }
-                    is ResponseEvent.ConnectionFailure -> whenFailedConnection(event)
-                    is ResponseEvent.Failure -> whenFailed(event)
-                    is ResponseEvent.Loading -> whenLoading(event)
+                    is ResponseEvent.ConnectionFailure -> requireActivity().whenFailedConnection(event)
+                    is ResponseEvent.Failure -> requireActivity().whenFailed(event)
+                    is ResponseEvent.Loading -> requireActivity().whenLoading(event)
                     else -> Log.d(
                         TAG,
                         "onCreate() called with: event = $event"
@@ -99,11 +141,16 @@ class MainFragment : Fragment() {
             viewModel.categories.collectLatest { event ->
                 when (event) {
                     is ResponseEvent.SuccessResponse<*> -> {
+                        binding.main.isVisible = true
                         Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
+                        val responseEvent = event.response as ResponseData
+                        binding.contentCategory.tvCategoryTitle.text = getString(R.string.label_categories)
+                        val list = responseEvent.response.categories
+                        categoryAdapter.setItems(list, ViewType.CATEGORY.type)
                     }
-                    is ResponseEvent.ConnectionFailure -> whenFailedConnection(event)
-                    is ResponseEvent.Failure -> whenFailed(event)
-                    is ResponseEvent.Loading -> whenLoading(event)
+                    is ResponseEvent.ConnectionFailure -> requireActivity().whenFailedConnection(event)
+                    is ResponseEvent.Failure -> requireActivity().whenFailed(event)
+                    is ResponseEvent.Loading -> requireActivity().whenLoading(event)
                     else -> Log.d(
                         TAG,
                         "onCreate() called with: event = $event"
@@ -134,14 +181,5 @@ class MainFragment : Fragment() {
         viewModel.consumeRemoteChannels()
         viewModel.consumeRemoteNewEpisodes()
         viewModel.consumeRemoteCategories()
-//        repeat(3) { listIndex ->
-//            val items = mutableListOf<String>()
-//            repeat(10) { itemIndex -> items.add(itemIndex.toString()) }
-//            lists.add(TitledList("List number $listIndex", ViewType.values()[listIndex].type,
-//                items.toMutableList()
-//            ))
-//        }
-//        Log.d(TAG, "loadItems() called: $lists")
-        adapter.setItems(lists)
     }
 }

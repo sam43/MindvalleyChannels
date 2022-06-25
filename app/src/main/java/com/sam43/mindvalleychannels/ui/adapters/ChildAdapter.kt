@@ -16,7 +16,6 @@ import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_RAIL_PORTRAIT
 
 @SuppressLint("NotifyDataSetChanged")
 class ChildAdapter: RecyclerView.Adapter<BaseViewHolder<Any>>() {
-
     private var currentBindViewType = TYPE_RAIL_PORTRAIT
     private var type = ViewType.COURSE.name
     private var items = listOf<Any>()

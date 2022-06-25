@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_channels">Channels</string>
+    <string name="label_episodes">New Episodes</string>
+    <string name="label_categories">Browse by Category</string>
 </resources>

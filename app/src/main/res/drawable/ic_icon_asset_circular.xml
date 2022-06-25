@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--set image to be shown on circular image view-->
+    <item android:drawable="@drawable/bg_circular"
+        android:gravity="center"/>
+    <item android:drawable="@drawable/ic_mindvalley"
+        android:gravity="center"/>
+</layer-list>

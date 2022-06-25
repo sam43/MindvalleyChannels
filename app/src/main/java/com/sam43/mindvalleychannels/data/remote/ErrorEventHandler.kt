@@ -1,16 +1,21 @@
 package com.sam43.mindvalleychannels.data.remote
 
+import android.content.Context
+import android.widget.Toast
+
 object ErrorEventHandler {
 
-    fun whenFailedConnection(event: ResponseEvent.ConnectionFailure) {
+    fun Context.whenFailedConnection(event: ResponseEvent.ConnectionFailure) {
 
     }
 
-    fun whenLoading(event: ResponseEvent.Loading) {
+    fun Context.whenLoading(event: ResponseEvent.Loading) {
 
     }
 
-    fun whenFailed(event: ResponseEvent.Failure) {
+    fun Context.whenFailed(event: ResponseEvent.Failure) {
 
     }
+
+    fun Context.showToast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
 }
