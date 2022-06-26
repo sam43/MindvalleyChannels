@@ -4,16 +4,16 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.sam43.mindvalleychannels.data.local.daos.CategoryDao
 import com.sam43.mindvalleychannels.data.local.daos.ChannelsDao
-import com.sam43.mindvalleychannels.data.local.daos.MediaDao
-import com.sam43.mindvalleychannels.data.local.entity.ChannelsEntity
+import com.sam43.mindvalleychannels.data.local.daos.EpisodeDao
+import com.sam43.mindvalleychannels.data.local.entity.*
 
 
 @Database(
-    entities = [ChannelsEntity::class],
+    entities = [CategoryEntity::class, CourseEntity::class, ChannelEntity::class, EpisodeEntity::class, SeriesEntity::class],
     version = 1, exportSchema = false
 )
 abstract class AppDB: RoomDatabase() {
     abstract val channelsDao: ChannelsDao
     abstract val categoryDao: CategoryDao
-    abstract val mediaDao: MediaDao
+    abstract val episodeDao: EpisodeDao
 }

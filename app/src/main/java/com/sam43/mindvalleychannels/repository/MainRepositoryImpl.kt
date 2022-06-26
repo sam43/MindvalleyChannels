@@ -1,10 +1,15 @@
 package com.sam43.mindvalleychannels.repository
 
+import com.sam43.mindvalleychannels.BuildConfig
+import com.sam43.mindvalleychannels.data.local.AppDB
+import com.sam43.mindvalleychannels.data.local.entity.CategoryEntity
 import com.sam43.mindvalleychannels.data.local.entity.ChannelsIncludingCourseAndSeries
+import com.sam43.mindvalleychannels.data.local.entity.EpisodeEntity
+import com.sam43.mindvalleychannels.data.local.mappers.CategoryResponseMapper
+import com.sam43.mindvalleychannels.data.local.mappers.ChannelResponseMapper
+import com.sam43.mindvalleychannels.data.local.mappers.EpisodeResponseMapper
 import com.sam43.mindvalleychannels.data.remote.EventState
 import com.sam43.mindvalleychannels.data.remote.ResponseData
-import com.sam43.mindvalleychannels.data.remote.objects.CategoryResponse
-import com.sam43.mindvalleychannels.data.remote.objects.EpisodesResponse
 import com.sam43.mindvalleychannels.network.Api
 import com.sam43.mindvalleychannels.utils.AppConstants
 import kotlinx.coroutines.Dispatchers
@@ -21,22 +26,40 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 import javax.net.ssl.SSLException
 
-class MainRepositoryImpl @Inject constructor(private val api: Api) : MainRepository {
+@Suppress("BlockingMethodInNonBlockingContext")
+class MainRepositoryImpl @Inject constructor(
+    private val channelResponseMapper: ChannelResponseMapper,
+    private val episodeResponseMapper: EpisodeResponseMapper,
+    private val categoryResponseMapper: CategoryResponseMapper,
+    private val api: Api,
+    private val db: AppDB
+    ) : MainRepository {
 
-    override suspend fun getChannelsData(): Flow<EventState<ChannelsIncludingCourseAndSeries>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getChannelsData(): Flow<EventState<List<ChannelsIncludingCourseAndSeries>>> =
+        bindDataFromServer(
+            networkCall = { handleNetworkResponse { api.consumeChannelsData(BuildConfig.ROUTE_CHANNELS) } },
+            localDbCall = { db.channelsDao.fetchChannels() },
+            localDbObservableCall = { db.channelsDao.fetchChannelsAsFlow() },
+            saveNetworkResponse = { db.channelsDao.insertChannelsWithCoursesAndSeries(channelResponseMapper.map(it)) }
+        )
 
-    override suspend fun getCategoriesData(): Flow<EventState<CategoryResponse>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getCategoriesData(): Flow<EventState<List<CategoryEntity>>> =
+        bindDataFromServer(
+            networkCall = { handleNetworkResponse { api.consumeCategoriesData(BuildConfig.ROUTE_CATEGORIES) } },
+            localDbCall = { db.categoryDao.fetchAllCategories() },
+            localDbObservableCall = { db.categoryDao.fetchCategoriesAsFlow() },
+            saveNetworkResponse = { db.categoryDao.insertCategories(categoryResponseMapper.map(it)) }
+        )
 
-    override suspend fun getNewEpisodesData(): Flow<EventState<EpisodesResponse>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getNewEpisodesData(): Flow<EventState<List<EpisodeEntity>>> =
+        bindDataFromServer(
+            networkCall = { handleNetworkResponse { api.consumeNewEpisodesData(BuildConfig.ROUTE_NEW_EPISODES) } },
+            localDbCall = { db.episodeDao.fetchEpisodes() },
+            localDbObservableCall = { db.episodeDao.fetchEpisodesAsFlow() },
+            saveNetworkResponse = { db.episodeDao.insertEpisodes(episodeResponseMapper.map(it)) }
+        )
 
-    @Suppress("BlockingMethodInNonBlockingContext")
-    private suspend inline fun <reified RT> processNetworkResponse(
+    private suspend inline fun <reified RT> handleNetworkResponse(
         crossinline block: suspend () -> Response<ResponseData<RT>>
     ): EventState<RT> {
         try {
@@ -76,7 +99,7 @@ class MainRepositoryImpl @Inject constructor(private val api: Api) : MainReposit
         }
     }
 
-    private inline fun <NetworkResponse, CachedResponse> bindLocalAndRemoteCalls(
+    private inline fun <NetworkResponse, CachedResponse> bindDataFromServer(
         crossinline networkCall: suspend () -> EventState<NetworkResponse>,
         crossinline localDbCall: suspend () -> CachedResponse,
         crossinline localDbObservableCall: () -> Flow<CachedResponse>,
@@ -90,9 +113,10 @@ class MainRepositoryImpl @Inject constructor(private val api: Api) : MainReposit
                     withContext(Dispatchers.IO) { saveNetworkResponse(response.response) }
                     emitAll(localDbObservableCall().map { EventState.Success(it) })
                 }
-                is EventState.Failure -> {
+                is EventState.Failure ->
                     emit(EventState.Failure(response.errorText, cachedResponse))
-                }
+                is EventState.Loading ->
+                    emit(EventState.Loading(cachedResponse))
             }
         }
     }

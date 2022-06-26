@@ -11,6 +11,7 @@ import retrofit2.http.Path
 
 interface Api {
 
+    @Deprecated("Not in Use")
     @GET("raw/{route}")
     suspend fun consumeResponseData(@Path("route") route: String): Response<ResponseDataX>
 

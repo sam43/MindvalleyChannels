@@ -4,7 +4,7 @@ import com.sam43.mindvalleychannels.data.local.entity.EpisodeEntity
 import com.sam43.mindvalleychannels.data.remote.objects.EpisodesResponse
 import javax.inject.Inject
 
-class EpisodeMapper @Inject constructor() : Mapper<EpisodesResponse, List<EpisodeEntity>> {
+class EpisodeResponseMapper @Inject constructor() : Mapper<EpisodesResponse, List<EpisodeEntity>> {
     override suspend fun map(from: EpisodesResponse): List<EpisodeEntity> =
         from.media.map {
             with(it) {

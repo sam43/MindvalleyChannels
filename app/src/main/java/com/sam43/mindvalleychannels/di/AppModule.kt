@@ -33,31 +33,28 @@ object AppModule {
             AppDB::class.java,
             AppConstants.DATABASE_NAME
         )
-            .addTypeConverter(Converters(GsonParser(Gson())))
             .build()
     }
-
-    @Provides
-    @Singleton
-    fun provideChannelDao(appDB: AppDB) = appDB.channelsDao
-
-    @Provides
-    @Singleton
-    fun provideCategoryDao(appDB: AppDB) = appDB.categoryDao
-
-    @Provides
-    @Singleton
-    fun provideMediaDao(appDB: AppDB) = appDB.mediaDao
-
-    @Provides
-    @Singleton
-    fun provideRepository(api: Api) : MainRepository = MainRepositoryImpl(api)
+//    @Provides
+//    @Singleton
+//    fun provideChannelDao(appDB: AppDB) = appDB.channelsDao
+//
+//    @Provides
+//    @Singleton
+//    fun provideCategoryDao(appDB: AppDB) = appDB.categoryDao
+//
+//    @Provides
+//    @Singleton
+//    fun provideMediaDao(appDB: AppDB) = appDB.mediaDao
+//
+//    @Provides
+//    @Singleton
+//    fun provideRepository(api: Api, db: AppDB) : MainRepository = MainRepositoryImpl(api, db)
 
     @Singleton
     @Provides
     fun provideCurrencyApi(okHttpClient: OkHttpClient): Api = Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
-        //.baseUrl(BuildConfig.PLACEHOLDER_BASE)
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()
