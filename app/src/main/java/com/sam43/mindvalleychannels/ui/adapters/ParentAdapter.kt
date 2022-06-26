@@ -24,6 +24,7 @@ import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_RAIL_PORTRAIT
 import com.sam43.mindvalleychannels.utils.AppConstants.isListOfType
 import com.sam43.mindvalleychannels.utils.AppConstants.isMutableListOfType
 import com.sam43.mindvalleychannels.utils.loadImage
+import com.sam43.mindvalleychannels.utils.loadImageCircular
 
 @SuppressLint("NotifyDataSetChanged")
 class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
@@ -117,7 +118,8 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
             //binding.divider.isVisible = position != items.size - 1
             binding.tvMediaCount.text = currentItem?.mediaCount.plus(" Episodes")
             binding.nestedTitleTextView.text = currentItem?.title
-            currentItem?.icon?.let { loadImage(binding.ivChannelIcon, it.thumbnailUrl, R.drawable.ic_icon_asset_circular) }
+            val icon: String? = currentItem?.icon?.let { it.url ?: it.thumbnailUrl }
+            loadImageCircular(binding.ivChannelIcon, icon.toString())
             // conditional check on the item type
             when {
                 currentItem?.list?.isMutableListOfType<LatestMedia>() == true -> {

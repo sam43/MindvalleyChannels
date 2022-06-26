@@ -10,7 +10,7 @@ import com.sam43.mindvalleychannels.utils.parser.JsonParser
 @ProvidedTypeConverter
 class Converters(private val jsonParser: JsonParser) {
     @TypeConverter
-    fun fromRatesJson(json: String): Data? {
+    fun fromDataJson(json: String): Data? {
         return jsonParser.fromJson<Data>(
             json,
             object : TypeToken<Data>(){}.type
@@ -18,7 +18,7 @@ class Converters(private val jsonParser: JsonParser) {
     }
 
     @TypeConverter
-    fun toRatesJson(meanings: Data): String {
+    fun toDataJson(meanings: Data): String {
         return jsonParser.toJson(
             meanings,
             object : TypeToken<Data>(){}.type
