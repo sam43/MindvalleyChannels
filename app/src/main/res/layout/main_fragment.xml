@@ -22,7 +22,7 @@
             style="@style/TextHeading1Style"
             android:layout_width="match_parent"
             android:textStyle="bold"
-            android:textSize="@dimen/sp_28"
+            android:textSize="@dimen/sp_30"
             android:textColor="@color/TopTitle"
             android:layout_margin="@dimen/default_margin"
             android:layout_height="wrap_content"

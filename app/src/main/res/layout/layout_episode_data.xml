@@ -12,7 +12,7 @@
         style="@style/TextHeading1Style"
         android:layout_width="0dp"
         android:textStyle="bold"
-        android:textSize="@dimen/sp_25"
+        android:textSize="@dimen/sp_20"
         android:layout_height="wrap_content"
         android:textColor="@color/subTitle"
         app:layout_constraintEnd_toEndOf="parent"
