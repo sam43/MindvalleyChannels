@@ -5,15 +5,15 @@ import android.widget.Toast
 
 object ErrorEventHandler {
 
-    fun Context.whenFailedConnection(event: ResponseEvent.ConnectionFailure) {
+    fun Context.whenFailedConnection(event: EventState.ConnectionFailure) {
 
     }
 
-    fun Context.whenLoading(event: ResponseEvent.Loading) {
+    fun Context.whenLoading(event: EventState.Loading) {
 
     }
 
-    fun Context.whenFailed(event: ResponseEvent.Failure) {
+    fun Context.whenFailed(event: EventState.Failure) {
 
     }
 

@@ -19,9 +19,8 @@ import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenFailed
 import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenFailedConnection
 import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenLoading
 import com.sam43.mindvalleychannels.data.remote.ResponseData
-import com.sam43.mindvalleychannels.data.remote.ResponseEvent
+import com.sam43.mindvalleychannels.data.remote.EventState
 import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
-import com.sam43.mindvalleychannels.data.remote.objects.Media
 import com.sam43.mindvalleychannels.databinding.MainFragmentBinding
 import com.sam43.mindvalleychannels.ui.adapters.ChildAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ParentAdapter
@@ -93,71 +92,7 @@ class MainFragment : Fragment() {
     }
 
     private fun initObservers() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.channels.collectLatest { event ->
-                when (event) {
-                    is ResponseEvent.SuccessResponse<*> -> {
-                        binding.main.isVisible = true
-                        Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
-                        val responseEvent = event.response as ResponseData
-                        val lists = arrayListOf<TitledList>()
-                        responseEvent.response.channelsItems.forEach {
-                            lists.add(TitledList(it.title, getViewType(it), it.mediaCount.toString(), it.iconAsset, getDefinedList(it)))
-                        }
-                        parentAdapter.setItems(lists)
-                    }
-                    is ResponseEvent.ConnectionFailure -> requireActivity().whenFailedConnection(event)
-                    is ResponseEvent.Failure -> requireActivity().whenFailed(event)
-                    is ResponseEvent.Loading -> requireActivity().whenLoading(event)
-                    else -> Log.d(
-                        TAG,
-                        "onCreate() called with: event = $event"
-                    )
-                }
-            }
-        }
-        lifecycleScope.launchWhenStarted {
-            viewModel.newEpisodes.collectLatest { event ->
-                when (event) {
-                    is ResponseEvent.SuccessResponse<*> -> {
-                        binding.main.isVisible = true
-                        val responseEvent = event.response as ResponseData
-                        binding.contentEpisode.tvTitle.text = getString(R.string.label_episodes)
-                        val list = responseEvent.response.media
-                        Log.d(TAG, "initObservers() called with: media list = $list")
-                        episodeAdapter.setItems(list, ViewType.COURSE.type)
-                    }
-                    is ResponseEvent.ConnectionFailure -> requireActivity().whenFailedConnection(event)
-                    is ResponseEvent.Failure -> requireActivity().whenFailed(event)
-                    is ResponseEvent.Loading -> requireActivity().whenLoading(event)
-                    else -> Log.d(
-                        TAG,
-                        "onCreate() called with: event = $event"
-                    )
-                }
-            }
-        }
-        lifecycleScope.launchWhenStarted {
-            viewModel.categories.collectLatest { event ->
-                when (event) {
-                    is ResponseEvent.SuccessResponse<*> -> {
-                        binding.main.isVisible = true
-                        Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
-                        val responseEvent = event.response as ResponseData
-                        binding.contentCategory.tvCategoryTitle.text = getString(R.string.label_categories)
-                        val list = responseEvent.response.categories
-                        categoryAdapter.setItems(list, ViewType.CATEGORY.type)
-                    }
-                    is ResponseEvent.ConnectionFailure -> requireActivity().whenFailedConnection(event)
-                    is ResponseEvent.Failure -> requireActivity().whenFailed(event)
-                    is ResponseEvent.Loading -> requireActivity().whenLoading(event)
-                    else -> Log.d(
-                        TAG,
-                        "onCreate() called with: event = $event"
-                    )
-                }
-            }
-        }
+
     }
 
     private fun getDefinedList(it: ChannelsItem): MutableList<Any> =

@@ -5,12 +5,21 @@ import android.view.WindowManager
 
 object AppConstants {
     var TAG = javaClass.simpleName.toString()
-
-    const val LINEAR_LAYOUT: String = "LINEAR_LAYOUT"
     const val DATABASE_NAME = "mind_valley_app_db"
     const val TYPE_RAIL_PORTRAIT = 0
     const val TYPE_RAIL_LANDSCAPE = 1
     const val TYPE_GRID_CATEGORY = 2
+
+    const val SOCKET_TIME_OUT_EXCEPTION =
+        "Request timed out while trying to connect. Please ensure you have a strong signal and try again."
+    const val UNKNOWN_NETWORK_EXCEPTION =
+        "An unexpected error has occurred. Please check your network connection and try again."
+    const val CONNECT_EXCEPTION =
+        "Could not connect to the server. Please check your internet connection and try again."
+    const val UNKNOWN_HOST_EXCEPTION =
+        "Couldn't connect to the server at the moment. Please try again in a few minutes."
+    const val SSL_EXCEPTION =
+        "Software caused connection abort. Please check your internet connection and try again."
 
     // extensions
     fun Window.transparentStatusBar() {

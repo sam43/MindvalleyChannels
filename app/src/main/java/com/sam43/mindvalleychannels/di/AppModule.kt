@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
 import com.sam43.mindvalleychannels.BuildConfig
 import com.sam43.mindvalleychannels.data.local.AppDB
-import com.sam43.mindvalleychannels.data.local.typeconverter.Converters
 import com.sam43.mindvalleychannels.network.Api
 import com.sam43.mindvalleychannels.repository.MainRepository
 import com.sam43.mindvalleychannels.repository.MainRepositoryImpl

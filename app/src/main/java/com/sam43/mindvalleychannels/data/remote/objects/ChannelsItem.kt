@@ -7,6 +7,9 @@ import com.sam43.mindvalleychannels.data.remote.common.IconAsset
 import com.sam43.mindvalleychannels.data.remote.common.LatestMedia
 import com.sam43.mindvalleychannels.data.remote.common.Sery
 @Keep
+data class ChannelsResponse(val channels: List<ChannelsItem>)
+
+@Keep
 data class ChannelsItem(
     @SerializedName("coverAsset")
     val coverAsset: CoverAsset,
