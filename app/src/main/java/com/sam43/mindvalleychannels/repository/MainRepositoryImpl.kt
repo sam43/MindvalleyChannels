@@ -3,52 +3,70 @@ package com.sam43.mindvalleychannels.repository
 import com.sam43.mindvalleychannels.BuildConfig
 import com.sam43.mindvalleychannels.data.remote.ResponseData
 import com.sam43.mindvalleychannels.network.Api
+import com.sam43.mindvalleychannels.utils.NetworkConstants
 import com.sam43.mindvalleychannels.utils.parser.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import retrofit2.Response
-import java.io.IOException
+import java.lang.Exception
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
+import javax.net.ssl.SSLException
 
-class MainRepositoryImpl @Inject constructor(private val api: Api) : MainRepository {
+class MainRepositoryImpl @Inject constructor(private val api: Api, private val hasNetwork: Boolean) : MainRepository {
 
     override suspend fun getChannelsData(): Flow<Resource<ResponseData>> = flow {
         emit(Resource.Loading())
         val channelsInfo = api.consumeResponseData(BuildConfig.ROUTE_CHANNELS)
         val data = getResponseData(channelsInfo)
-        emit(emitResponse(data))
+        emit(handleResponse(data))
+        if (!hasNetwork) Resource.NoInternet(NetworkConstants.CONNECT_EXCEPTION, data)
     }
 
     override suspend fun getCategoriesData(): Flow<Resource<ResponseData>> = flow {
         emit(Resource.Loading())
         val categoryInfo = api.consumeResponseData(BuildConfig.ROUTE_CATEGORIES)
         val data = getResponseData(categoryInfo)
-        emit(emitResponse(data))
+        emit(handleResponse(data))
+        if (!hasNetwork) Resource.NoInternet(NetworkConstants.CONNECT_EXCEPTION, data)
     }
 
     override suspend fun getMediaData(): Flow<Resource<ResponseData>> = flow {
         emit(Resource.Loading())
         val newEpisodesInfo = api.consumeResponseData(BuildConfig.ROUTE_NEW_EPISODES)
         val data = getResponseData(newEpisodesInfo)
-        emit(emitResponse(data))
+        emit(handleResponse(data))
+        if (!hasNetwork) Resource.NoInternet(NetworkConstants.CONNECT_EXCEPTION, data)
     }
 
-    private fun emitResponse(data: ResponseData?): Resource<ResponseData> {
-        return try {
-            if (data != null) Resource.Success(data) else Resource.Error("Something Wrong",null)
-        } catch (e: HttpException) {
-            Resource.Error(
-                message = "Oops, Some error occurred while parsing the response!",
-                data = data
-            )
-        } catch (e: IOException) {
-            Resource.NoInternet(
-                message = "Couldn't reach server, check your internet connection.",
-                data = data
-            )
+    private fun handleResponse(data: ResponseData?): Resource<ResponseData> =
+        if (data != null) Resource.Success(data) else Resource.Error("Something went wrong",null)
+
+    private fun handleExceptions(e: Exception): Resource<ResponseData> = when (e) {
+            is ConnectException -> {
+                Resource.Error(NetworkConstants.CONNECT_EXCEPTION)
+            }
+            is UnknownHostException -> {
+                Resource.Error(NetworkConstants.UNKNOWN_HOST_EXCEPTION)
+            }
+            is SocketTimeoutException -> {
+                Resource.Error(NetworkConstants.SOCKET_TIME_OUT_EXCEPTION)
+            }
+            is HttpException -> {
+                Resource.Error(
+                    e.response()?.errorBody()?.string()
+                        ?: NetworkConstants.UNKNOWN_NETWORK_EXCEPTION
+                )
+            }
+            is SSLException -> {
+                Resource.Error(NetworkConstants.SSL_EXCEPTION)
+            }
+            else ->
+                Resource.Error(NetworkConstants.UNKNOWN_NETWORK_EXCEPTION)
         }
-    }
 
     private fun getResponseData(response: Response<ResponseData>): ResponseData? =
         if (response.isSuccessful)

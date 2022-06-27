@@ -5,8 +5,6 @@ import android.view.WindowManager
 
 object AppConstants {
     var TAG = javaClass.simpleName.toString()
-
-    const val LINEAR_LAYOUT: String = "LINEAR_LAYOUT"
     const val DATABASE_NAME = "mind_valley_app_db"
     const val TYPE_RAIL_PORTRAIT = 0
     const val TYPE_RAIL_LANDSCAPE = 1

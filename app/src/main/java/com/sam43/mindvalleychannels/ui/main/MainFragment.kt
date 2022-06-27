@@ -15,13 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import com.sam43.mindvalleychannels.R
-import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenFailed
-import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenFailedConnection
-import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenLoading
 import com.sam43.mindvalleychannels.data.remote.ResponseData
 import com.sam43.mindvalleychannels.data.remote.ResponseEvent
 import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
-import com.sam43.mindvalleychannels.data.remote.objects.Media
 import com.sam43.mindvalleychannels.databinding.MainFragmentBinding
 import com.sam43.mindvalleychannels.ui.adapters.ChildAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ParentAdapter
@@ -29,6 +25,7 @@ import com.sam43.mindvalleychannels.ui.adapters.ScrollStateHolder
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.ViewType
 import com.sam43.mindvalleychannels.ui.model.TitledList
 import com.sam43.mindvalleychannels.utils.AppConstants.TAG
+import com.sam43.mindvalleychannels.utils.showError
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -106,9 +103,8 @@ class MainFragment : Fragment() {
                         }
                         parentAdapter.setItems(lists)
                     }
-                    is ResponseEvent.ConnectionFailure -> requireActivity().whenFailedConnection(event)
-                    is ResponseEvent.Failure -> requireActivity().whenFailed(event)
-                    is ResponseEvent.Loading -> requireActivity().whenLoading(event)
+                    is ResponseEvent.ConnectionFailure -> binding.root.showError(event.errorText)
+                    is ResponseEvent.Failure ->  binding.root.showError(event.errorText)
                     else -> Log.d(
                         TAG,
                         "onCreate() called with: event = $event"
@@ -127,9 +123,8 @@ class MainFragment : Fragment() {
                         Log.d(TAG, "initObservers() called with: media list = $list")
                         episodeAdapter.setItems(list, ViewType.COURSE.type)
                     }
-                    is ResponseEvent.ConnectionFailure -> requireActivity().whenFailedConnection(event)
-                    is ResponseEvent.Failure -> requireActivity().whenFailed(event)
-                    is ResponseEvent.Loading -> requireActivity().whenLoading(event)
+                    is ResponseEvent.ConnectionFailure ->  binding.root.showError(event.errorText)
+                    is ResponseEvent.Failure ->  binding.root.showError(event.errorText)
                     else -> Log.d(
                         TAG,
                         "onCreate() called with: event = $event"
@@ -148,14 +143,18 @@ class MainFragment : Fragment() {
                         val list = responseEvent.response.categories
                         categoryAdapter.setItems(list, ViewType.CATEGORY.type)
                     }
-                    is ResponseEvent.ConnectionFailure -> requireActivity().whenFailedConnection(event)
-                    is ResponseEvent.Failure -> requireActivity().whenFailed(event)
-                    is ResponseEvent.Loading -> requireActivity().whenLoading(event)
+                    is ResponseEvent.ConnectionFailure -> binding.root.showError(event.errorText)
+                    is ResponseEvent.Failure ->  binding.root.showError(event.errorText)
                     else -> Log.d(
                         TAG,
                         "onCreate() called with: event = $event"
                     )
                 }
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.status.collectLatest { isLoading ->
+                if (isLoading) {} else {}
             }
         }
     }
@@ -181,5 +180,6 @@ class MainFragment : Fragment() {
         viewModel.consumeRemoteChannels()
         viewModel.consumeRemoteNewEpisodes()
         viewModel.consumeRemoteCategories()
+        viewModel.fetchLoadingStatus()
     }
 }
