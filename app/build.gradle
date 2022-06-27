@@ -74,10 +74,6 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     kapt "androidx.hilt:hilt-compiler:1.0.0"
 
-    // Room
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
@@ -85,8 +81,6 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_log_intercepter"
     implementation "com.localebro:okhttpprofiler:$okhttp_profile_intercepter"
 
-    // Kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:$room_version"
 
     // Activity KTX for viewModels()
     implementation "androidx.activity:activity-ktx:1.4.0"
@@ -104,6 +98,12 @@ dependencies {
 
     // recyclerview snap helper
     implementation 'com.github.rubensousa:gravitysnaphelper:2.2.2'
+
+    //SwipeToRefreshLayout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    //shimmer
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     // Glide image loader
     implementation 'com.github.bumptech.glide:glide:4.13.0'

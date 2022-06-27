@@ -1,22 +1,22 @@
 package com.sam43.mindvalleychannels.ui.adapters
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.sam43.mindvalleychannels.databinding.HorizontalListShimmerBinding
 import com.sam43.mindvalleychannels.databinding.ItemChildDataCategoryBinding
 import com.sam43.mindvalleychannels.databinding.ItemChildDataLandscapeBinding
 import com.sam43.mindvalleychannels.databinding.ItemChildDataPortraitBinding
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.*
-import com.sam43.mindvalleychannels.utils.AppConstants.TAG
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_GRID_CATEGORY
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_RAIL_LANDSCAPE
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_RAIL_PORTRAIT
+import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_SHIMMER_LAYOUT_PORTRAIT
 
 @SuppressLint("NotifyDataSetChanged")
 class ChildAdapter: RecyclerView.Adapter<BaseViewHolder<Any>>() {
-    private var currentBindViewType = TYPE_RAIL_PORTRAIT
+    private var currentBindViewType = TYPE_SHIMMER_LAYOUT_PORTRAIT
     private var type = ViewType.COURSE.name
     private var items = listOf<Any>()
 
@@ -53,6 +53,14 @@ class ChildAdapter: RecyclerView.Adapter<BaseViewHolder<Any>>() {
                         ), parent, false
                     )
                 )
+            TYPE_SHIMMER_LAYOUT_PORTRAIT ->
+                ShimmerViewHolder(
+                    HorizontalListShimmerBinding.inflate(
+                        LayoutInflater.from(
+                            parent.context
+                        ), parent, false
+                    )
+                )
             else ->
                 throw IllegalArgumentException("Invalid view type")
         }
@@ -65,7 +73,7 @@ class ChildAdapter: RecyclerView.Adapter<BaseViewHolder<Any>>() {
             ViewType.SERIES.name -> TYPE_RAIL_LANDSCAPE
             ViewType.COURSE.name -> TYPE_RAIL_PORTRAIT
             ViewType.CATEGORY.name -> TYPE_GRID_CATEGORY
-            else -> Log.d(TAG, "getItemViewType() called with: position = $position")
+            else -> TYPE_SHIMMER_LAYOUT_PORTRAIT
         }
         return currentBindViewType
     }

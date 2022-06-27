@@ -33,6 +33,22 @@
         app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         tools:text="@string/app_name" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/epi_shimmer_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintEnd_toEndOf="@+id/tvSubTitle"
+        app:layout_constraintStart_toStartOf="@+id/tvSubTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubTitle"
+        app:shimmer_auto_start="true">
+
+        <include
+            layout="@layout/horizontal_list_shimmer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <com.github.rubensousa.gravitysnaphelper.OrientationAwareRecyclerView
         android:id="@+id/rvEpisodes"
         android:layout_width="match_parent"

@@ -5,6 +5,7 @@
     <color name="secondary">#FF03DAC5</color>
     <color name="secondary_dark">#FF018786</color>
     <color name="backGround">#23272F</color>
+    <color name="shimmerBackGround">#2D3034</color>
     <color name="mainTitle">#FFFFFFFF</color>
     <color name="TopTitle">#C1C1C1</color>
     <color name="subTitle">#95989D</color>

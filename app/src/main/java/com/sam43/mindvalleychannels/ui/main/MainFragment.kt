@@ -29,13 +29,8 @@ import com.sam43.mindvalleychannels.utils.showError
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
-
 @AndroidEntryPoint
 class MainFragment : Fragment() {
-    companion object {
-        fun newInstance() = MainFragment()
-    }
-
     private val snapHelper: GravitySnapHelper by lazy { GravitySnapHelper(Gravity.START) }
     private lateinit var binding: MainFragmentBinding
     private lateinit var parentAdapter: ParentAdapter
@@ -55,10 +50,17 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
+        initViews(savedInstanceState)
+        loadItems()
+    }
+
+    private fun initViews(savedInstanceState: Bundle?) {
         scrollStateHolder = ScrollStateHolder(savedInstanceState)
         setupParentAdapter()
         setupSingleAdapter()
-        loadItems()
+        binding.swipeRefresh.setOnRefreshListener {
+            loadItems()
+        }
     }
 
     private fun setupParentAdapter() {
@@ -94,7 +96,8 @@ class MainFragment : Fragment() {
             viewModel.channels.collectLatest { event ->
                 when (event) {
                     is ResponseEvent.SuccessResponse<*> -> {
-                        binding.main.isVisible = true
+                        binding.rvChannels.isVisible = true
+                        binding.channelShimmerLayout.isVisible = false
                         Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
                         val responseEvent = event.response as ResponseData
                         val lists = arrayListOf<TitledList>()
@@ -116,7 +119,6 @@ class MainFragment : Fragment() {
             viewModel.newEpisodes.collectLatest { event ->
                 when (event) {
                     is ResponseEvent.SuccessResponse<*> -> {
-                        binding.main.isVisible = true
                         val responseEvent = event.response as ResponseData
                         binding.contentEpisode.tvTitle.text = getString(R.string.label_episodes)
                         val list = responseEvent.response.media
@@ -136,7 +138,6 @@ class MainFragment : Fragment() {
             viewModel.categories.collectLatest { event ->
                 when (event) {
                     is ResponseEvent.SuccessResponse<*> -> {
-                        binding.main.isVisible = true
                         Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
                         val responseEvent = event.response as ResponseData
                         binding.contentCategory.tvCategoryTitle.text = getString(R.string.label_categories)
@@ -154,7 +155,9 @@ class MainFragment : Fragment() {
         }
         lifecycleScope.launchWhenStarted {
             viewModel.status.collectLatest { isLoading ->
-                if (isLoading) {} else {}
+                binding.contentEpisode.rvEpisodes.isVisible = !isLoading
+                binding.contentEpisode.epiShimmerLayout.isVisible = isLoading
+                binding.swipeRefresh.isRefreshing = isLoading
             }
         }
     }

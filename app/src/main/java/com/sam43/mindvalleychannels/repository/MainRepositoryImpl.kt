@@ -7,15 +7,21 @@ import com.sam43.mindvalleychannels.utils.NetworkConstants
 import com.sam43.mindvalleychannels.utils.parser.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.ResponseBody
+import retrofit2.Converter
 import retrofit2.HttpException
 import retrofit2.Response
+import retrofit2.Retrofit
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
 import javax.net.ssl.SSLException
 
-class MainRepositoryImpl @Inject constructor(private val api: Api, private val hasNetwork: Boolean) : MainRepository {
+class MainRepositoryImpl @Inject constructor(
+    private val retrofit: Retrofit,
+    private val api: Api,
+    private val hasNetwork: Boolean) : MainRepository {
 
     override suspend fun getChannelsData(): Flow<Resource<ResponseData>> = flow {
         emit(Resource.Loading())
@@ -70,6 +76,17 @@ class MainRepositoryImpl @Inject constructor(private val api: Api, private val h
     private fun getResponseData(response: Response<ResponseData>): ResponseData? =
         if (response.isSuccessful)
             response.body()
-        else null
-
+        else {
+            parseError(response)
+            null
+        }
+    private fun parseError(response: Response<*>) {
+        val converter: Converter<ResponseBody, Exception> = retrofit
+            .responseBodyConverter(Exception::class.java, arrayOfNulls<Annotation>(0))
+        try {
+            response.errorBody()?.let { converter.convert(it) }
+        } catch (e: Exception) {
+            handleExceptions(e)
+        }
+    }
 }
