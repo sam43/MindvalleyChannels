@@ -7,7 +7,7 @@
     app:cardBackgroundColor="@color/backGround"
     app:cardCornerRadius="@dimen/space_35"
     android:layout_margin="@dimen/space_8"
-    app:cardElevation="@dimen/default_margin"
+    app:cardElevation="@dimen/space_2"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"

@@ -119,6 +119,8 @@ class MainFragment : Fragment() {
             viewModel.newEpisodes.collectLatest { event ->
                 when (event) {
                     is ResponseEvent.SuccessResponse<*> -> {
+                        binding.contentEpisode.rvEpisodes.isVisible = true
+                        binding.contentEpisode.epiShimmerLayout.isVisible = false
                         val responseEvent = event.response as ResponseData
                         binding.contentEpisode.tvTitle.text = getString(R.string.label_episodes)
                         val list = responseEvent.response.media
@@ -157,6 +159,8 @@ class MainFragment : Fragment() {
             viewModel.status.collectLatest { isLoading ->
                 binding.contentEpisode.rvEpisodes.isVisible = !isLoading
                 binding.contentEpisode.epiShimmerLayout.isVisible = isLoading
+                binding.rvChannels.isVisible = !isLoading
+                binding.channelShimmerLayout.isVisible = isLoading
                 binding.swipeRefresh.isRefreshing = isLoading
             }
         }
