@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView android:id="@+id/cardView"
+<androidx.cardview.widget.CardView xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/backGround"
     app:cardCornerRadius="@dimen/space_35"
-    android:layout_margin="@dimen/default_margin"
+    android:layout_margin="@dimen/space_8"
     app:cardElevation="@dimen/default_margin"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -19,12 +20,19 @@
         style="@style/TextHeading1Style"
         android:text="@string/app_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/space_60"
         android:contentDescription="@string/app_name"
+        android:padding="@dimen/default_margin"
         android:layout_gravity="center"
+        android:textStyle="bold"
+        android:autoText="true"
+        android:autoSizeMaxTextSize="@dimen/sp_17"
+        android:autoSizeMinTextSize="@dimen/sp_12"
         android:gravity="center"
         android:maxLines="2"
         android:scaleType="centerCrop"
-        android:src="@drawable/placeholder" />
+        android:src="@drawable/placeholder"
+        tools:targetApi="o"
+        tools:ignore="Deprecated,TextViewEdits" />
 
 </androidx.cardview.widget.CardView>
