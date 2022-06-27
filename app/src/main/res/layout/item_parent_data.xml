@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/default_margin"
     android:orientation="vertical">
 
     <TextView
@@ -13,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/sp_20"
-        android:layout_marginTop="@dimen/space_8"
+        android:layout_marginTop="@dimen/default_margin"
         android:textStyle="bold"
         android:paddingStart="@dimen/space_14"
         android:paddingEnd="@dimen/default_margin"
@@ -51,7 +50,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/space_16"
+        android:layout_marginTop="@dimen/space_8"
         android:layout_marginBottom="@dimen/space_8"
         android:background="@drawable/ic_list_divider"
         app:layout_constraintBottom_toBottomOf="parent"
