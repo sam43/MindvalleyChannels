@@ -5,11 +5,11 @@ import androidx.room.RoomDatabase
 import com.sam43.mindvalleychannels.data.local.daos.CategoryDao
 import com.sam43.mindvalleychannels.data.local.daos.ChannelsDao
 import com.sam43.mindvalleychannels.data.local.daos.MediaDao
-import com.sam43.mindvalleychannels.data.local.entity.ChannelsEntity
+import com.sam43.mindvalleychannels.data.local.entity.ResponseEntity
 
 
 @Database(
-    entities = [ChannelsEntity::class],
+    entities = [ResponseEntity::class],
     version = 1, exportSchema = false
 )
 abstract class AppDB: RoomDatabase() {
