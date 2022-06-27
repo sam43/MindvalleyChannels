@@ -1,10 +1,9 @@
 package com.sam43.mindvalleychannels.ui.adapters.viewholder
 
 import androidx.core.view.isVisible
-import com.sam43.mindvalleychannels.data.remote.common.LatestMedia
-import com.sam43.mindvalleychannels.data.remote.common.Sery
-import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
-import com.sam43.mindvalleychannels.data.remote.objects.Media
+import com.sam43.mindvalleychannels.data.local.entity.CourseEntity
+import com.sam43.mindvalleychannels.data.local.entity.EpisodeEntity
+import com.sam43.mindvalleychannels.data.local.entity.SeriesEntity
 import com.sam43.mindvalleychannels.databinding.ItemChildDataLandscapeBinding
 import com.sam43.mindvalleychannels.utils.loadImage
 
@@ -18,21 +17,21 @@ class LandscapeViewHolder(
         binding: ItemChildDataLandscapeBinding
     ) {
         when (item) {
-            is LatestMedia -> {
+            is CourseEntity -> {
                 binding.tvSubInfo.isVisible = false
                 binding.tvInfo.text = item.title
-                loadImage(binding.imgCover, item.coverAsset.url)
+                loadImage(binding.imgCover, item.url)
             }
-            is Sery -> {
+            is SeriesEntity -> {
                 binding.tvSubInfo.isVisible = false
                 binding.tvInfo.text = item.title
-                loadImage(binding.imgCover, item.coverAsset.url)
+                loadImage(binding.imgCover, item.url)
             }
-            is Media -> {
+            is EpisodeEntity -> {
                 binding.tvSubInfo.isVisible = true
                 binding.tvInfo.text = item.title
-                binding.tvSubInfo.text = item.channel.title
-                loadImage(binding.imgCover, item.coverAsset.url)
+                binding.tvSubInfo.text = item.channelTitle
+                loadImage(binding.imgCover, item.url)
             }
             else -> {
 //                val list = arrayListOf(item)

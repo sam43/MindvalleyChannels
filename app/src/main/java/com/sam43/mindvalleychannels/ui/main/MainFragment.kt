@@ -15,19 +15,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import com.sam43.mindvalleychannels.R
-import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenFailed
-import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenFailedConnection
-import com.sam43.mindvalleychannels.data.remote.ErrorEventHandler.whenLoading
-import com.sam43.mindvalleychannels.data.remote.ResponseData
+import com.sam43.mindvalleychannels.data.local.entity.CategoryEntity
+import com.sam43.mindvalleychannels.data.local.entity.ChannelsIncludingCourseAndSeries
+import com.sam43.mindvalleychannels.data.local.entity.EpisodeEntity
 import com.sam43.mindvalleychannels.data.remote.EventState
-import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
 import com.sam43.mindvalleychannels.databinding.MainFragmentBinding
 import com.sam43.mindvalleychannels.ui.adapters.ChildAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ParentAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ScrollStateHolder
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.ViewType
 import com.sam43.mindvalleychannels.ui.model.TitledList
-import com.sam43.mindvalleychannels.utils.AppConstants.TAG
+import com.sam43.mindvalleychannels.utils.AppConstants
+import com.sam43.mindvalleychannels.utils.showSnackBar
+import com.sam43.mindvalleychannels.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -60,7 +60,14 @@ class MainFragment : Fragment() {
         scrollStateHolder = ScrollStateHolder(savedInstanceState)
         setupParentAdapter()
         setupSingleAdapter()
-        loadItems()
+        callApis()
+    }
+
+    private fun callApis() {
+        viewModel.fetchNewEpisodes()
+        viewModel.fetchChannels()
+        viewModel.fetchCategories()
+        viewModel.checkIfLoading()
     }
 
     private fun setupParentAdapter() {
@@ -92,16 +99,89 @@ class MainFragment : Fragment() {
     }
 
     private fun initObservers() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.status.collectLatest { isLoading ->
+                if (isLoading) {
+                    requireContext().showToast("is loading...")
+                }
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.channels.collectLatest { event ->
+                when (event) {
+                    is MainViewModel.EventView.Error -> binding.root.showSnackBar(event.errorText)
+                    is MainViewModel.EventView.Loading -> {}
+                    is MainViewModel.EventView.Success<*> -> {
+                        binding.main.isVisible = true
+                        Log.d(
+                            AppConstants.TAG,
+                            "initObservers() called with: event = ${event.response}"
+                        )
+                        val responseList = event.response as List<ChannelsIncludingCourseAndSeries>
+                        val lists = arrayListOf<TitledList>()
+                        responseList.forEach {
+                            lists.add(
+                                TitledList(
+                                    it.channel.title,
+                                    getViewType(it),
+                                    it.channel.mediaCount.toString(),
+                                    it.channel.iconAssetUrl,
+                                    it.channel.coverAssetUrl,
+                                    getDefinedList(it)
+                                )
+                            )
+                        }
+                        parentAdapter.setItems(lists)
+                    }
+                }
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.newEpisodes.collectLatest { event ->
+                when (event) {
+                    is MainViewModel.EventView.Success<*> -> {
+                        binding.main.isVisible = true
+                        val responseList = event.response as List<EpisodeEntity>
+                        binding.contentEpisode.tvTitle.text = getString(R.string.label_episodes)
+                        Log.d(
+                            AppConstants.TAG,
+                            "initObservers() called with: media list = $responseList"
+                        )
+                        episodeAdapter.setItems(responseList, ViewType.COURSE.type)
+                    }
+                    is MainViewModel.EventView.Error -> binding.root.showSnackBar(event.errorText)
+                    is MainViewModel.EventView.Loading -> {}
+                }
+            }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.categories.collectLatest { event ->
+                when (event) {
+                    is MainViewModel.EventView.Success<*> -> {
+                        binding.main.isVisible = true
+                        val responseList = event.response as List<CategoryEntity>
+                        binding.contentEpisode.tvTitle.text = getString(R.string.label_categories)
+                        Log.d(
+                            AppConstants.TAG,
+                            "initObservers() called with: media list = $responseList"
+                        )
+                        episodeAdapter.setItems(responseList, ViewType.COURSE.type)
+                    }
+                    is MainViewModel.EventView.Error -> binding.root.showSnackBar(event.errorText)
+                    is MainViewModel.EventView.Loading -> {}
+                }
 
+            }
+        }
     }
 
-    private fun getDefinedList(it: ChannelsItem): MutableList<Any> =
+    private fun getDefinedList(it: ChannelsIncludingCourseAndSeries): MutableList<Any> =
         when {
-            it.series.isNullOrEmpty() -> it.latestMedia.toMutableList()
+            it.series.isNullOrEmpty() -> it.courses.toMutableList()
             else -> it.series.toMutableList()
         }
 
-    private fun getViewType(it: ChannelsItem): String =
+    private fun getViewType(it: ChannelsIncludingCourseAndSeries): String =
         when {
             it.series.isNullOrEmpty() -> ViewType.COURSE.type
             else -> ViewType.SERIES.type
@@ -110,11 +190,5 @@ class MainFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         scrollStateHolder.onSaveInstanceState(outState)
-    }
-
-    private fun loadItems() {
-        viewModel.consumeRemoteChannels()
-        viewModel.consumeRemoteNewEpisodes()
-        viewModel.consumeRemoteCategories()
     }
 }

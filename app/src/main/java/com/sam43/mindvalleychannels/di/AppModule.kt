@@ -68,9 +68,9 @@ object AppModule {
         okHttpProfilerInterceptor: OkHttpProfilerInterceptor
     ): OkHttpClient {
         val okHttpClientBuilder = OkHttpClient().newBuilder()
-        okHttpClientBuilder.connectTimeout(30L, TimeUnit.SECONDS)
-        okHttpClientBuilder.readTimeout(30L, TimeUnit.SECONDS)
-        okHttpClientBuilder.writeTimeout(30L, TimeUnit.SECONDS)
+        okHttpClientBuilder.connectTimeout(10L, TimeUnit.SECONDS)
+        okHttpClientBuilder.readTimeout(10L, TimeUnit.SECONDS)
+        okHttpClientBuilder.writeTimeout(10L, TimeUnit.SECONDS)
         if (BuildConfig.DEBUG) {
             okHttpClientBuilder.addInterceptor(loggingInterceptor)
             okHttpClientBuilder.addInterceptor(okHttpProfilerInterceptor)

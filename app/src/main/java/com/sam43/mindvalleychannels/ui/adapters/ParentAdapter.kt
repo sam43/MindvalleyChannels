@@ -117,7 +117,7 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
             //binding.divider.isVisible = position != items.size - 1
             binding.tvMediaCount.text = currentItem?.mediaCount.plus(" Episodes")
             binding.nestedTitleTextView.text = currentItem?.title
-            currentItem?.icon?.let { loadImage(binding.ivChannelIcon, it.thumbnailUrl, R.drawable.ic_icon_asset_circular) }
+            currentItem?.icon?.let { loadImage(binding.ivChannelIcon, it, R.drawable.ic_icon_asset_circular) }
             // conditional check on the item type
             when {
                 currentItem?.list?.isMutableListOfType<LatestMedia>() == true -> {

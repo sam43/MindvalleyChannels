@@ -10,11 +10,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface Api {
-
-    @Deprecated("Not in Use")
-    @GET("raw/{route}")
-    suspend fun consumeResponseData(@Path("route") route: String): Response<ResponseDataX>
-
     @GET("raw/{route}")
     suspend fun consumeNewEpisodesData(@Path("route") route: String): Response<ResponseData<EpisodesResponse>>
 

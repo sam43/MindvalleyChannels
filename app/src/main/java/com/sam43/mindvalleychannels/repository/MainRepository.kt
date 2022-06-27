@@ -21,7 +21,7 @@ import java.net.UnknownHostException
 import javax.net.ssl.SSLException
 
 interface MainRepository {
-    suspend fun getChannelsData(): Flow<EventState<List<ChannelsIncludingCourseAndSeries>>>
-    suspend fun getCategoriesData(): Flow<EventState<List<CategoryEntity>>>
-    suspend fun getNewEpisodesData(): Flow<EventState<List<EpisodeEntity>>>
+    fun getChannelsData(): Flow<EventState<List<ChannelsIncludingCourseAndSeries>>>
+    fun getCategoriesData(): Flow<EventState<List<CategoryEntity>>>
+    fun getNewEpisodesData(): Flow<EventState<List<EpisodeEntity>>>
 }

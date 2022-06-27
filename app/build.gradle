@@ -21,6 +21,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        multiDexEnabled true
+
         buildConfigField("String", "BASE_URL", secretProperty['BASE_URL'])
         buildConfigField("String", "PLACEHOLDER_BASE", secretProperty['PLACEHOLDER_BASE'])
         buildConfigField("String", "ROUTE_NEW_EPISODES", secretProperty['NEW_EPISODES'])
@@ -108,6 +110,9 @@ dependencies {
     // Glide image loader
     implementation 'com.github.bumptech.glide:glide:4.13.0'
     kapt 'com.github.bumptech.glide:compiler:4.13.0'
+
+    //multidex
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     def jUnitVersion = "4.13.2"
     def androidXMockitoVersion = "4.2.0"

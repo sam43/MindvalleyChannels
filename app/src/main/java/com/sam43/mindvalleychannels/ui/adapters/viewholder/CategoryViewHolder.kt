@@ -1,6 +1,6 @@
 package com.sam43.mindvalleychannels.ui.adapters.viewholder
 
-import com.sam43.mindvalleychannels.data.remote.objects.Category
+import com.sam43.mindvalleychannels.data.local.entity.CategoryEntity
 import com.sam43.mindvalleychannels.databinding.ItemChildDataCategoryBinding
 
 class CategoryViewHolder(
@@ -13,14 +13,14 @@ class CategoryViewHolder(
         binding: ItemChildDataCategoryBinding
     ) {
         when (item) {
-            is Category -> {
+            is CategoryEntity -> {
                 binding.tvInfo.text = item.name
             }
             else -> {
-                val list = arrayListOf(item)
-                list.forEach {
-                    binding.tvInfo.text = it.toString()
-                }
+//                val list = arrayListOf(item)
+//                list.forEach {
+//                    binding.tvInfo.text = it.toString()
+//                }
             }
         }
     }
