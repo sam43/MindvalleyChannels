@@ -3,7 +3,6 @@ package com.sam43.mindvalleychannels.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sam43.mindvalleychannels.data.remote.ResponseEvent
-import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
 import com.sam43.mindvalleychannels.repository.MainRepository
 import com.sam43.mindvalleychannels.utils.parser.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
