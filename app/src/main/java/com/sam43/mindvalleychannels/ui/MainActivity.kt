@@ -2,9 +2,9 @@ package com.sam43.mindvalleychannels.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.sam43.mindvalleychannels.R
 import com.sam43.mindvalleychannels.databinding.MainActivityBinding
-import com.sam43.mindvalleychannels.ui.main.MainFragment
-import com.sam43.mindvalleychannels.utils.AppConstants.transparentStatusBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //window.transparentStatusBar()
         binding = MainActivityBinding.inflate(layoutInflater)
+        window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.bg_normal))
         setContentView(binding.root)
     }
 }
