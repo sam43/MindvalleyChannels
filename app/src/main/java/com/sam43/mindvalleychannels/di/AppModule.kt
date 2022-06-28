@@ -6,9 +6,6 @@ import android.net.NetworkInfo
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
 import com.sam43.mindvalleychannels.BuildConfig
 import com.sam43.mindvalleychannels.network.Api
-import com.sam43.mindvalleychannels.repository.MainRepository
-import com.sam43.mindvalleychannels.repository.MainRepositoryImpl
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

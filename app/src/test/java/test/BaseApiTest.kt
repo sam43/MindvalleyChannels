@@ -1,4 +1,4 @@
-package com.sam43.mindvalleychannels
+package test
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.gson.Gson

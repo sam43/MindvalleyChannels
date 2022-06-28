@@ -1,17 +1,15 @@
-package com.sam43.mindvalleychannels.repository
+package test.repository
 
 import com.sam43.mindvalleychannels.BuildConfig
 import com.sam43.mindvalleychannels.data.remote.ResponseData
 import com.sam43.mindvalleychannels.network.Api
-import com.sam43.mindvalleychannels.service.SetupServiceApiTest
+import com.sam43.mindvalleychannels.repository.MainRepository
+import test.SetupServiceApiTest
 import com.sam43.mindvalleychannels.utils.parser.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.Before
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

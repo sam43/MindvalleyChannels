@@ -22,7 +22,6 @@ android {
         versionName "1.0"
 
         buildConfigField("String", "BASE_URL", secretProperty['BASE_URL'])
-        buildConfigField("String", "PLACEHOLDER_BASE", secretProperty['PLACEHOLDER_BASE'])
         buildConfigField("String", "ROUTE_NEW_EPISODES", secretProperty['NEW_EPISODES'])
         buildConfigField("String", "ROUTE_CHANNELS", secretProperty['CHANNELS'])
         buildConfigField("String", "ROUTE_CATEGORIES", secretProperty['CATEGORIES'])
@@ -52,6 +51,9 @@ android {
     }
     kapt {
         correctErrorTypes = true
+    }
+    hilt {
+        enableTransformForLocalTests = true
     }
 }
 
@@ -114,13 +116,14 @@ dependencies {
     // Required -- JUnit 4 framework
     testImplementation "junit:junit:$jUnitVersion"
     testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "org.robolectric:robolectric:4.8.1"
     // Optional -- Mockito framework
     testImplementation "org.mockito:mockito-core:$androidXMockitoVersion"
     testImplementation("org.mockito:mockito-inline:$androidXMockitoVersion")
     //For runBlockingTest, CoroutineDispatcher etc.
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1'
     // retrofit mock
-    implementation 'com.squareup.retrofit2:retrofit-mock:2.6.2'
+    testImplementation 'com.squareup.retrofit2:retrofit-mock:2.6.2'
     testImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
 
 
@@ -137,4 +140,12 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:truth:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation "org.robolectric:robolectric:4.8.1"
+
+    // debug impl
+    debugImplementation("androidx.fragment:fragment-testing:1.5.0-rc01")
+    debugImplementation("androidx.fragment:fragment-ktx:1.5.0-rc01")
+    debugImplementation("androidx.test:core:1.4.0")
+    debugImplementation("androidx.test:rules:1.4.0")
+    debugImplementation("androidx.test:runner:1.4.0")
 }

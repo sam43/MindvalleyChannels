@@ -1,4 +1,4 @@
-package com.sam43.mindvalleychannels
+package test
 
 import com.sam43.mindvalleychannels.di.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
