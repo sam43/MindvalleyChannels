@@ -9,6 +9,9 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.SocketPolicy
 import org.junit.After
 import org.junit.Before
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -16,7 +19,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 @ExperimentalCoroutinesApi
 abstract class SetupServiceApiTest: BaseApiTest() {
 
+    @Mock
     lateinit var api: Api
+    @Mock
     lateinit var mockServer: MockWebServer
 
     @CallSuper
