@@ -5,7 +5,8 @@ import java.util.*
 enum class ViewType(var type: String) {
     COURSE("COURSE"),
     SERIES("SERIES"),
-    CATEGORY("CATEGORY")
+    CATEGORY("CATEGORY"),
+    LOADER("LOADER")
 }
 val answers: Array<ViewType> = ViewType.values()
 val rand = Random()

@@ -9,6 +9,8 @@ object AppConstants {
     const val TYPE_RAIL_PORTRAIT = 0
     const val TYPE_RAIL_LANDSCAPE = 1
     const val TYPE_GRID_CATEGORY = 2
+    const val TYPE_SHIMMER_LAYOUT_PORTRAIT = 3
+    //const val TYPE_SHIMMER_LAYOUT_LANDSCAPE = 4
 
     const val SOCKET_TIME_OUT_EXCEPTION =
         "Request timed out while trying to connect. Please ensure you have a strong signal and try again."
