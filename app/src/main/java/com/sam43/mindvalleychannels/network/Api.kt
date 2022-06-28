@@ -1,7 +1,6 @@
 package com.sam43.mindvalleychannels.network
 
 import com.sam43.mindvalleychannels.data.remote.ResponseData
-import com.sam43.mindvalleychannels.data.remote.ResponseDataX
 import com.sam43.mindvalleychannels.data.remote.objects.CategoryResponse
 import com.sam43.mindvalleychannels.data.remote.objects.ChannelsResponse
 import com.sam43.mindvalleychannels.data.remote.objects.EpisodesResponse

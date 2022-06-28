@@ -16,4 +16,10 @@ abstract class BindModules {
     abstract fun provideRepository(
         repository: MainRepositoryImpl
     ): MainRepository
+
+    @Singleton
+    @Binds
+    abstract fun provideCoroutineDispatcher(
+        dispatcherProvider: DefaultDispatcherProvider
+    ): DispatcherProvider
 }

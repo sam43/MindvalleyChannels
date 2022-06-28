@@ -1,92 +1,55 @@
 package com.sam43.mindvalleychannels.repository
 
 import com.sam43.mindvalleychannels.BuildConfig
-import com.sam43.mindvalleychannels.data.remote.ResponseData
+import com.sam43.mindvalleychannels.data.local.AppDB
+import com.sam43.mindvalleychannels.data.local.entity.CategoryEntity
+import com.sam43.mindvalleychannels.data.local.entity.ChannelsIncludingCourseAndSeries
+import com.sam43.mindvalleychannels.data.local.entity.EpisodeEntity
+import com.sam43.mindvalleychannels.data.local.mappers.CategoryResponseMapper
+import com.sam43.mindvalleychannels.data.local.mappers.ChannelResponseMapper
+import com.sam43.mindvalleychannels.data.local.mappers.EpisodeResponseMapper
+import com.sam43.mindvalleychannels.data.remote.EventState
 import com.sam43.mindvalleychannels.network.Api
-import com.sam43.mindvalleychannels.utils.NetworkConstants
-import com.sam43.mindvalleychannels.utils.parser.Resource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import okhttp3.ResponseBody
-import retrofit2.Converter
-import retrofit2.HttpException
-import retrofit2.Response
-import retrofit2.Retrofit
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import javax.inject.Inject
-import javax.net.ssl.SSLException
 
+@Suppress("BlockingMethodInNonBlockingContext")
 class MainRepositoryImpl @Inject constructor(
-    private val retrofit: Retrofit,
+    private val channelResponseMapper: ChannelResponseMapper,
+    private val episodeResponseMapper: EpisodeResponseMapper,
+    private val categoryResponseMapper: CategoryResponseMapper,
     private val api: Api,
-    private val hasNetwork: Boolean) : MainRepository {
+    private val db: AppDB
+) : AbsRepository(), MainRepository {
 
-    override suspend fun getChannelsData(): Flow<Resource<ResponseData>> = flow {
-        emit(Resource.Loading())
-        val channelsInfo = api.consumeResponseData(BuildConfig.ROUTE_CHANNELS)
-        val data = getResponseData(channelsInfo)
-        emit(handleResponse(data))
-        if (!hasNetwork) Resource.NoInternet(NetworkConstants.CONNECT_EXCEPTION, data)
-    }
-
-    override suspend fun getCategoriesData(): Flow<Resource<ResponseData>> = flow {
-        emit(Resource.Loading())
-        val categoryInfo = api.consumeResponseData(BuildConfig.ROUTE_CATEGORIES)
-        val data = getResponseData(categoryInfo)
-        emit(handleResponse(data))
-        if (!hasNetwork) Resource.NoInternet(NetworkConstants.CONNECT_EXCEPTION, data)
-    }
-
-    override suspend fun getMediaData(): Flow<Resource<ResponseData>> = flow {
-        emit(Resource.Loading())
-        val newEpisodesInfo = api.consumeResponseData(BuildConfig.ROUTE_NEW_EPISODES)
-        val data = getResponseData(newEpisodesInfo)
-        emit(handleResponse(data))
-        if (!hasNetwork) Resource.NoInternet(NetworkConstants.CONNECT_EXCEPTION, data)
-    }
-
-    private fun handleResponse(data: ResponseData?): Resource<ResponseData> =
-        if (data != null) Resource.Success(data) else Resource.Error("Something went wrong",null)
-
-    private fun handleExceptions(e: Exception): Resource<ResponseData> = when (e) {
-            is ConnectException -> {
-                Resource.Error(NetworkConstants.CONNECT_EXCEPTION)
+    override fun getChannelsData(): Flow<EventState<List<ChannelsIncludingCourseAndSeries>>> =
+        bindDataFromServer(
+            networkCall = { handleNetworkResponse { api.consumeChannelsData(BuildConfig.ROUTE_CHANNELS) } },
+            localDbCall = { db.channelsDao.fetchChannels() },
+            localDbObservableCall = { db.channelsDao.fetchChannelsAsFlow() },
+            saveNetworkResponse = {
+                db.channelsDao.insertChannelsWithCoursesAndSeries(channelResponseMapper.map(it))
             }
-            is UnknownHostException -> {
-                Resource.Error(NetworkConstants.UNKNOWN_HOST_EXCEPTION)
-            }
-            is SocketTimeoutException -> {
-                Resource.Error(NetworkConstants.SOCKET_TIME_OUT_EXCEPTION)
-            }
-            is HttpException -> {
-                Resource.Error(
-                    e.response()?.errorBody()?.string()
-                        ?: NetworkConstants.UNKNOWN_NETWORK_EXCEPTION
-                )
-            }
-            is SSLException -> {
-                Resource.Error(NetworkConstants.SSL_EXCEPTION)
-            }
-            else ->
-                Resource.Error(NetworkConstants.UNKNOWN_NETWORK_EXCEPTION)
-        }
+        )
 
-    private fun getResponseData(response: Response<ResponseData>): ResponseData? =
-        if (response.isSuccessful)
-            response.body()
-        else {
-            parseError(response)
-            null
-        }
-    private fun parseError(response: Response<*>) {
-        val converter: Converter<ResponseBody, Exception> = retrofit
-            .responseBodyConverter(Exception::class.java, arrayOfNulls<Annotation>(0))
-        try {
-            response.errorBody()?.let { converter.convert(it) }
-        } catch (e: Exception) {
-            handleExceptions(e)
-        }
-    }
+    override fun getCategoriesData(): Flow<EventState<List<CategoryEntity>>> =
+        bindDataFromServer(
+            networkCall = { handleNetworkResponse {
+                api.consumeCategoriesData(BuildConfig.ROUTE_CATEGORIES)
+            } },
+            localDbCall = {
+                db.categoryDao.fetchAllCategories() },
+            localDbObservableCall = {
+                db.categoryDao.fetchCategoriesAsFlow() },
+            saveNetworkResponse = {
+                db.categoryDao.insertCategories(categoryResponseMapper.map(it)) }
+        )
+
+    override fun getNewEpisodesData(): Flow<EventState<List<EpisodeEntity>>> =
+        bindDataFromServer(
+            networkCall = { handleNetworkResponse { api.consumeNewEpisodesData(BuildConfig.ROUTE_NEW_EPISODES) } },
+            localDbCall = { db.episodeDao.fetchEpisodes() },
+            localDbObservableCall = { db.episodeDao.fetchEpisodesAsFlow() },
+            saveNetworkResponse = { db.episodeDao.insertEpisodes(episodeResponseMapper.map(it)) }
+        )
 }

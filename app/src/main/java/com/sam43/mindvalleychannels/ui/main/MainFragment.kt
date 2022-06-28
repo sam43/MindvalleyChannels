@@ -15,9 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import com.sam43.mindvalleychannels.R
-import com.sam43.mindvalleychannels.data.remote.ResponseData
-import com.sam43.mindvalleychannels.data.remote.ResponseEvent
-import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
+import com.sam43.mindvalleychannels.data.local.entity.CategoryEntity
+import com.sam43.mindvalleychannels.data.local.entity.ChannelsIncludingCourseAndSeries
+import com.sam43.mindvalleychannels.data.local.entity.EpisodeEntity
+import com.sam43.mindvalleychannels.data.remote.EventView
 import com.sam43.mindvalleychannels.databinding.MainFragmentBinding
 import com.sam43.mindvalleychannels.ui.adapters.ChildAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ParentAdapter
@@ -95,19 +96,27 @@ class MainFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.channels.collectLatest { event ->
                 when (event) {
-                    is ResponseEvent.SuccessResponse<*> -> {
+                    is EventView.Success<*> -> {
                         binding.rvChannels.isVisible = true
                         binding.channelShimmerLayout.isVisible = false
                         Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
-                        val responseEvent = event.response as ResponseData
+                        val responseList = event.response as List<ChannelsIncludingCourseAndSeries>
                         val lists = arrayListOf<TitledList>()
-                        responseEvent.response.channelsItems.forEach {
-                            lists.add(TitledList(it.title, getViewType(it), it.mediaCount.toString(), it.iconAsset, getDefinedList(it)))
+                        responseList.forEach {
+                            lists.add(
+                                TitledList(
+                                    it.channel.title,
+                                    getViewType(it),
+                                    it.channel.mediaCount.toString(),
+                                    it.channel.iconAssetUrl,
+                                    it.channel.coverAssetUrl,
+                                    getDefinedList(it)
+                                )
+                            )
                         }
                         parentAdapter.setItems(lists)
                     }
-                    is ResponseEvent.ConnectionFailure -> binding.root.showError(event.errorText)
-                    is ResponseEvent.Failure ->  binding.root.showError(event.errorText)
+                    is EventView.Failure ->  binding.root.showError(event.errorText)
                     else -> Log.d(
                         TAG,
                         "onCreate() called with: event = $event"
@@ -118,17 +127,15 @@ class MainFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.newEpisodes.collectLatest { event ->
                 when (event) {
-                    is ResponseEvent.SuccessResponse<*> -> {
+                    is EventView.Success<*> -> {
                         binding.contentEpisode.rvEpisodes.isVisible = true
                         binding.contentEpisode.epiShimmerLayout.isVisible = false
-                        val responseEvent = event.response as ResponseData
+                        val list = event.response as List<EpisodeEntity>
                         binding.contentEpisode.tvTitle.text = getString(R.string.label_episodes)
-                        val list = responseEvent.response.media
                         Log.d(TAG, "initObservers() called with: media list = $list")
                         episodeAdapter.setItems(list, ViewType.COURSE.type)
                     }
-                    is ResponseEvent.ConnectionFailure ->  binding.root.showError(event.errorText)
-                    is ResponseEvent.Failure ->  binding.root.showError(event.errorText)
+                    is EventView.Failure ->  binding.root.showError(event.errorText)
                     else -> Log.d(
                         TAG,
                         "onCreate() called with: event = $event"
@@ -139,15 +146,13 @@ class MainFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.categories.collectLatest { event ->
                 when (event) {
-                    is ResponseEvent.SuccessResponse<*> -> {
+                    is EventView.Success<*> -> {
                         Log.d(TAG, "initObservers() called with: event = ${event.response.toString()}")
-                        val responseEvent = event.response as ResponseData
+                        val list = event.response as List<CategoryEntity>
                         binding.contentCategory.tvCategoryTitle.text = getString(R.string.label_categories)
-                        val list = responseEvent.response.categories
                         categoryAdapter.setItems(list, ViewType.CATEGORY.type)
                     }
-                    is ResponseEvent.ConnectionFailure -> binding.root.showError(event.errorText)
-                    is ResponseEvent.Failure ->  binding.root.showError(event.errorText)
+                    is EventView.Failure ->  binding.root.showError(event.errorText)
                     else -> Log.d(
                         TAG,
                         "onCreate() called with: event = $event"
@@ -166,13 +171,13 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun getDefinedList(it: ChannelsItem): MutableList<Any> =
+    private fun getDefinedList(it: ChannelsIncludingCourseAndSeries): MutableList<Any> =
         when {
-            it.series.isNullOrEmpty() -> it.latestMedia.toMutableList()
+            it.series.isNullOrEmpty() -> it.courses.toMutableList()
             else -> it.series.toMutableList()
         }
 
-    private fun getViewType(it: ChannelsItem): String =
+    private fun getViewType(it: ChannelsIncludingCourseAndSeries): String =
         when {
             it.series.isNullOrEmpty() -> ViewType.COURSE.type
             else -> ViewType.SERIES.type

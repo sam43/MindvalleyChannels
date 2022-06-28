@@ -1,13 +1,17 @@
 package com.sam43.mindvalleychannels.di
 
+import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import androidx.room.Room
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
 import com.sam43.mindvalleychannels.BuildConfig
+import com.sam43.mindvalleychannels.data.local.AppDB
 import com.sam43.mindvalleychannels.network.Api
 import com.sam43.mindvalleychannels.repository.MainRepository
 import com.sam43.mindvalleychannels.repository.MainRepositoryImpl
+import com.sam43.mindvalleychannels.utils.AppConstants
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -35,16 +39,16 @@ object AppModule {
             AppDB::class.java,
             AppConstants.DATABASE_NAME
         )
-            .addTypeConverter(Converters(GsonParser(Gson())))
             .build()
     }
 
-    @Provides
-    @Singleton
-    fun provideRepository(
-        api: Api,
-        @Named("hasNetwork") hasNetwork: Boolean,
-        retrofit: Retrofit) : MainRepository = MainRepositoryImpl(retrofit, api, hasNetwork)
+//    @Provides
+//    @Singleton
+//    fun provideRepository(
+//        retrofit: Retrofit,
+//        api: Api,
+//        @Named("hasNetwork") hasNetwork: Boolean
+//    ) : MainRepository = MainRepositoryImpl(retrofit, api, hasNetwork)
 
     @Provides
     @Singleton
@@ -141,15 +145,4 @@ object AppModule {
     @Provides
     @Singleton
     fun provideOkhttpProfilerInterceptor(): OkHttpProfilerInterceptor = OkHttpProfilerInterceptor()
-}
-
-
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class BindingModule {
-    @Singleton
-    @Binds
-    abstract fun provideCoroutineDispatcher(
-        dispatcherProvider: DefaultDispatcherProvider
-    ): DispatcherProvider
 }

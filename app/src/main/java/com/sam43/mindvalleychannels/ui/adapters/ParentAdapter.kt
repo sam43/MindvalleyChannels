@@ -118,7 +118,7 @@ class ParentAdapter(private val scrollStateHolder: ScrollStateHolder) :
             //binding.divider.isVisible = position != items.size - 1
             binding.tvMediaCount.text = currentItem?.mediaCount.plus(" Episodes")
             binding.nestedTitleTextView.text = currentItem?.title
-            val icon: String? = currentItem?.icon?.let { it.url ?: it.thumbnailUrl }
+            val icon: String? = currentItem?.icon
             loadImageCircular(binding.ivChannelIcon, icon.toString())
             // conditional check on the item type
             when {
