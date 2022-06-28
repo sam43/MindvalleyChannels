@@ -3,6 +3,7 @@ package com.sam43.mindvalleychannels.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sam43.mindvalleychannels.data.remote.ResponseEvent
+import com.sam43.mindvalleychannels.di.DispatcherProvider
 import com.sam43.mindvalleychannels.repository.MainRepository
 import com.sam43.mindvalleychannels.utils.parser.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: MainRepository
+    private val repository: MainRepository,
+    private val dispatcher: DispatcherProvider
 ) : ViewModel() {
 
     private val _channels = MutableStateFlow<ResponseEvent>(ResponseEvent.Loading)
@@ -26,7 +28,7 @@ class MainViewModel @Inject constructor(
     private val _status = MutableStateFlow<Boolean>(false)
     val status: StateFlow<Boolean> = _status
 
-    fun fetchLoadingStatus() = viewModelScope.launch(Dispatchers.IO) {
+    fun fetchLoadingStatus() = viewModelScope.launch(dispatcher.io()) {
         combine(
             channels, newEpisodes, categories
         ) { ch, ne, ca ->
@@ -38,7 +40,7 @@ class MainViewModel @Inject constructor(
 
     fun consumeRemoteChannels() {
         _channels.value = ResponseEvent.Loading
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher.io()) {
             repository.getChannelsData()
                 .onEach { response ->
                     when (response) {
@@ -56,7 +58,7 @@ class MainViewModel @Inject constructor(
     }
     fun consumeRemoteNewEpisodes() {
         _newEpisodes.value = ResponseEvent.Loading
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher.io()) {
             repository.getMediaData()
                 .onEach { response ->
                     when (response) {
@@ -74,7 +76,7 @@ class MainViewModel @Inject constructor(
     }
     fun consumeRemoteCategories() {
         _categories.value = ResponseEvent.Loading
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher.io()) {
             repository.getCategoriesData()
                 .onEach { response ->
                     when (response) {

@@ -8,6 +8,7 @@ import com.sam43.mindvalleychannels.BuildConfig
 import com.sam43.mindvalleychannels.network.Api
 import com.sam43.mindvalleychannels.repository.MainRepository
 import com.sam43.mindvalleychannels.repository.MainRepositoryImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,7 +44,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCurrencyApi(retrofit: Retrofit): Api = retrofit.create(Api::class.java)
+    fun provideServiceApi(retrofit: Retrofit): Api = retrofit.create(Api::class.java)
 
     @Provides
     @Singleton
@@ -128,4 +129,15 @@ object AppModule {
     @Provides
     @Singleton
     fun provideOkhttpProfilerInterceptor(): OkHttpProfilerInterceptor = OkHttpProfilerInterceptor()
+}
+
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class BindingModule {
+    @Singleton
+    @Binds
+    abstract fun provideCoroutineDispatcher(
+        dispatcherProvider: DefaultDispatcherProvider
+    ): DispatcherProvider
 }
