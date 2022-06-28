@@ -123,21 +123,3 @@ object AppModule {
     @Singleton
     fun provideOkhttpProfilerInterceptor(): OkHttpProfilerInterceptor = OkHttpProfilerInterceptor()
 }
-
-
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class BindingModule {
-    @Singleton
-    @Binds
-    abstract fun provideCoroutineDispatcher(
-        dispatcherProvider: DefaultDispatcherProvider
-    ): DispatcherProvider
-
-
-    @Singleton
-    @Binds
-    abstract fun provideRepository(
-        mindValleyRepository: MainRepositoryImpl
-    ): MainRepository
-}

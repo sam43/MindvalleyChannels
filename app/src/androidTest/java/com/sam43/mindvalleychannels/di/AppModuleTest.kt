@@ -7,7 +7,7 @@ import dagger.hilt.components.SingletonComponent
 
 
 @InstallIn(SingletonComponent::class)
-@UninstallModules(AppModule::class)
+@UninstallModules(BindingModule::class)
 @Module
-object AppModuleTest {
+abstract class BindingModuleTest {
 }
