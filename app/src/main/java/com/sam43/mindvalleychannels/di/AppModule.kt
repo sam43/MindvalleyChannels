@@ -29,13 +29,6 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideRepository(
-        api: Api,
-        @Named("hasNetwork") hasNetwork: Boolean,
-        retrofit: Retrofit) : MainRepository = MainRepositoryImpl(retrofit, api, hasNetwork)
-
-    @Provides
-    @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
@@ -140,4 +133,11 @@ abstract class BindingModule {
     abstract fun provideCoroutineDispatcher(
         dispatcherProvider: DefaultDispatcherProvider
     ): DispatcherProvider
+
+
+    @Singleton
+    @Binds
+    abstract fun provideRepository(
+        mindValleyRepository: MainRepositoryImpl
+    ): MainRepository
 }

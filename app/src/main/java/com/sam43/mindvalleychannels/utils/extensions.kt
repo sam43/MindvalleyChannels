@@ -14,20 +14,18 @@ import com.sam43.mindvalleychannels.R
 fun loadImage(iv: ImageView, url: String?, placeholder: Int = R.drawable.placeholder) =
     Glide.with(iv.context)
         .load(url)
-        .onlyRetrieveFromCache(true)
         .transition(DrawableTransitionOptions.withCrossFade())
         .centerCrop()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
         .placeholder(placeholder)
         .into(iv)
 
 fun loadImageCircular(iv: ImageView, url: String?, placeholder: Int = R.drawable.ic_icon_asset_circular) =
     Glide.with(iv.context)
         .load(url)
-        .onlyRetrieveFromCache(true)
         .transition(DrawableTransitionOptions.withCrossFade())
         .apply(RequestOptions.circleCropTransform())
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
         .placeholder(placeholder)
         .into(iv)
 

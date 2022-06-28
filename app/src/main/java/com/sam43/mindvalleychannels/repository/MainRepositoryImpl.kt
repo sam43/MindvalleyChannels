@@ -16,12 +16,14 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import javax.inject.Inject
+import javax.inject.Named
 import javax.net.ssl.SSLException
 
 class MainRepositoryImpl @Inject constructor(
     private val retrofit: Retrofit,
     private val api: Api,
-    private val hasNetwork: Boolean) : MainRepository {
+    @Named("hasNetwork") private val hasNetwork: Boolean
+    ) : MainRepository {
 
     override suspend fun getChannelsData(): Flow<Resource<ResponseData>> = flow {
         emit(Resource.Loading())
