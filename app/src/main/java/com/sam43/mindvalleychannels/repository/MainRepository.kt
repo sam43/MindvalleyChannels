@@ -7,7 +7,7 @@ import com.sam43.mindvalleychannels.data.remote.EventState
 import kotlinx.coroutines.flow.Flow
 
 interface MainRepository {
-    fun getChannelsData(): Flow<EventState<List<ChannelsIncludingCourseAndSeries>>>
-    fun getCategoriesData(): Flow<EventState<List<CategoryEntity>>>
-    fun getNewEpisodesData(): Flow<EventState<List<EpisodeEntity>>>
+    suspend fun getChannelsData(): Flow<EventState<List<ChannelsIncludingCourseAndSeries>>>
+    suspend fun getCategoriesData(): Flow<EventState<List<CategoryEntity>>>
+    suspend fun getNewEpisodesData(): Flow<EventState<List<EpisodeEntity>>>
 }
