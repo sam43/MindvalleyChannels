@@ -3,6 +3,7 @@ Mindvalley assignment for recruitment process
 
 - MVVM & Architecture Components (ViewModel, StateFlow, Flow) are used in this project.
 - Programming language: Kotlin.
+- A simple splash screen added in the start with application theme.
 - Kotlin Coroutines is used for background operations with different dispatcher.
 - Dagger Hilt is used for dependency injection.
 - Retrofit is used for networking.
