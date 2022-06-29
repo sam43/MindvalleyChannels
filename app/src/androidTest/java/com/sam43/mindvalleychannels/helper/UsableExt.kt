@@ -13,80 +13,41 @@ import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.core.internal.deps.dagger.internal.Preconditions
-import com.sam43.mindvalleychannels.ui.MainActivityTest
+import com.sam43.mindvalleychannels.MainActivityTest
+import com.sam43.mindvalleychannels.R
 import kotlinx.coroutines.runBlocking
 
 
-inline fun <reified T : Fragment> launchFragmentFromContainerX(
-    fragmentArgs: Bundle? = null,
-    crossinline action: Fragment.() -> Unit = {}
-) {
-    val startActivityIntent = Intent.makeMainActivity(
-        ComponentName(
-            ApplicationProvider.getApplicationContext(),
-            MainActivityTest::class.java
-        )
-    )
-
-    ActivityScenario.launch<MainActivityTest>(startActivityIntent).onActivity { activity ->
-        val navController = TestNavHostController(
-            ApplicationProvider.getApplicationContext())
-        // Create a mock NavController
-        //val mockNavController = mock(NavController::class.java)
-
-        // Create a graphical FragmentScenario for the MainFragment
-        val fragmentScenario = launchFragmentInContainer<T>()
-
-        // Set the NavController property on the fragment
-        fragmentScenario.onFragment { fragment ->
-            Navigation.setViewNavController(fragment.requireView(), navController)
-        }
-    }
-}
-
 inline fun <reified T : Fragment> launchFragmentInHiltContainer(
     fragmentArgs: Bundle? = null,
-    navHostController: NavHostController? = null,
+    themeResId: Int = androidx.fragment.testing.R.style.FragmentScenarioEmptyFragmentActivityTheme,
     fragmentFactory: FragmentFactory? = null,
     crossinline action: T.() -> Unit = {}
-
-): ActivityScenario<MainActivityTest> {
-
-    val startActivityIntent = Intent.makeMainActivity(
+) {
+    val mainActivityIntent = Intent.makeMainActivity(
         ComponentName(
             ApplicationProvider.getApplicationContext(),
             MainActivityTest::class.java
         )
-    )
+    ).putExtra(FragmentScenario.EmptyFragmentActivity.THEME_EXTRAS_BUNDLE_KEY, themeResId)
 
-    return ActivityScenario.launch<MainActivityTest>(startActivityIntent).onActivity { activity ->
+    ActivityScenario.launch<MainActivityTest>(mainActivityIntent).onActivity { activity ->
         fragmentFactory?.let {
             activity.supportFragmentManager.fragmentFactory = it
         }
-        val fragment: Fragment = activity.supportFragmentManager.fragmentFactory.instantiate(
+        val fragment = activity.supportFragmentManager.fragmentFactory.instantiate(
             Preconditions.checkNotNull(T::class.java.classLoader),
             T::class.java.name
         )
-
         fragment.arguments = fragmentArgs
 
-        runBlocking {
-            navHostController?.let {
-                fragment.viewLifecycleOwnerLiveData.observeForever { viewLifecycleOwner ->
-                    if (viewLifecycleOwner != null) {
-                        Navigation.setViewNavController(fragment.requireView(), it)
-                    }
-                }
-            }
-        }
-
-        activity.supportFragmentManager
-            .beginTransaction()
+        activity.supportFragmentManager.beginTransaction()
             .add(android.R.id.content, fragment, "")
             .commitNow()
 
         (fragment as T).action()
     }
+
 }
 
 fun withRecyclerView(recyclerViewId: Int): RecyclerViewMatcher {

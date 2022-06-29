@@ -21,7 +21,7 @@
             tools:context=".ui.main.MainFragment">
 
             <TextView
-                android:id="@+id/tvTitle"
+                android:id="@+id/tvTitleHome"
                 style="@style/TextHeading1Style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,6 +39,7 @@
                 layout="@layout/layout_episode_data" />
 
             <FrameLayout
+                android:id="@+id/flChannels"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <com.github.rubensousa.gravitysnaphelper.OrientationAwareRecyclerView
