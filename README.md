@@ -10,8 +10,7 @@ Mindvalley assignment for recruitment process
 - Navigation UI component was used for loading starting fragment and is scalable in future.
 - Retrofit is used for networking.
 - Gson and GsonConverterFactory is used for JSON parsing with retrofit.
-- Retrofit cache interceptor is used for cache mechanism and offline support. Reason behind not using room is, for the given scenario it will not be an efficient way. 
-  However, Room should be responsible for storing more frequent data from the user unlike the Preferences/ DataStore
+- Retrofit cache interceptor is used for cache mechanism and offline support.
 - Glide is used for image loading and caching.
 - A custom designed parent-child adapter was implemented for the recyclerview as it can handle multiple type of layout managers (depending upon the type).
 - Recyclerview was initiated with Custom Snaphelper for smooth UI experience.
@@ -19,7 +18,10 @@ Mindvalley assignment for recruitment process
 
 ### What parts of the test did you find challenging and why?
 
-After worked the network testing and repository testing, when I moved to the UI testing I found it challenging enough. I have tried with 
+I had to use the retrofit cache interceptor for offline caching mechanism. Initially I tried working with Room DB for quite a while but unfortunately I couldn't get along with only one issue that I was facing almost from the beginning. I still couldn't fix it even finishing the whole task!
+So, this was the first challenging task. The work with the room DB is in another branch named "feature/caching-using-room-db", i will fix it when I get time.
+
+Another one is UI testing. After worked the network testing and repository testing, when I moved to the UI testing I found it challenging enough. I have tried with 
 less complex UI than the current one. To resolve this, I also tried mocking the FragmentBinding to access the child view ID but I couldn't succeed but I can 
 check the immediate view hierarchy and test it. I needed some more research on it but as I have some deliverable form my office, I couldn't.
 
