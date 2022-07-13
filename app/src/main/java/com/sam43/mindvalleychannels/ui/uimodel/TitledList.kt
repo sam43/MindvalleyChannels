@@ -1,6 +1,6 @@
-package com.sam43.mindvalleychannels.ui.model
+package com.sam43.mindvalleychannels.ui.uimodel
 
-import com.sam43.mindvalleychannels.data.remote.common.IconAsset
+import com.sam43.mindvalleychannels.data.remote.model.common.IconAsset
 
 data class TitledList(
     val title: String,

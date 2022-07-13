@@ -1,7 +1,7 @@
 package com.sam43.mindvalleychannels.di
 
-import com.sam43.mindvalleychannels.repository.MainRepository
-import com.sam43.mindvalleychannels.repository.MainRepositoryImpl
+import com.sam43.mindvalleychannels.data.repository.MainRepository
+import com.sam43.mindvalleychannels.data.repository.MainRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

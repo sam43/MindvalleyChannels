@@ -2,11 +2,8 @@ package com.sam43.mindvalleychannels.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.NoActivityResumedException
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -20,12 +17,11 @@ import com.sam43.mindvalleychannels.di.BindingModule
 import com.sam43.mindvalleychannels.di.DispatcherProvider
 import com.sam43.mindvalleychannels.helper.launchFragmentInHiltContainer
 import com.sam43.mindvalleychannels.helper.withRecyclerView
-import com.sam43.mindvalleychannels.network.Api
-import com.sam43.mindvalleychannels.repository.MainRepository
+import com.sam43.mindvalleychannels.data.remote.service.Api
+import com.sam43.mindvalleychannels.data.repository.MainRepository
 import com.sam43.mindvalleychannels.ui.adapters.ParentAdapter
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.hamcrest.CoreMatchers.allOf
@@ -35,7 +31,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.MockitoAnnotations
 import retrofit2.Retrofit
 import javax.inject.Inject
 

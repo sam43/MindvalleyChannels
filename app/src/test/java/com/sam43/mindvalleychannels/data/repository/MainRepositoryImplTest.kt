@@ -1,6 +1,6 @@
-package com.sam43.mindvalleychannels.repository
+package com.sam43.mindvalleychannels.data.repository
 
-import com.sam43.mindvalleychannels.data.remote.ResponseData
+import com.sam43.mindvalleychannels.data.remote.model.ResponseData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.runBlocking
@@ -29,7 +29,7 @@ class MainRepositoryImplTest {
         Assert.assertTrue(list?.last()?.mediaCount == 59)
         Assert.assertTrue(list?.last()?.iconAsset == null)
         Assert.assertTrue(list?.last()?.latestMedia?.size == 12)
-        Assert.assertFalse(list?.last()?.series?.isNullOrEmpty()!!)
+        Assert.assertFalse(list?.last()?.series?.isEmpty()!!)
     }
 
     @Test

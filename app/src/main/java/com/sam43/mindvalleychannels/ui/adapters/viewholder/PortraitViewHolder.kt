@@ -1,12 +1,9 @@
 package com.sam43.mindvalleychannels.ui.adapters.viewholder
 
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
-import com.sam43.mindvalleychannels.R
-import com.sam43.mindvalleychannels.data.remote.common.LatestMedia
-import com.sam43.mindvalleychannels.data.remote.common.Sery
-import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
-import com.sam43.mindvalleychannels.data.remote.objects.Media
+import com.sam43.mindvalleychannels.data.remote.model.common.LatestMedia
+import com.sam43.mindvalleychannels.data.remote.model.common.Sery
+import com.sam43.mindvalleychannels.data.remote.model.objects.Media
 import com.sam43.mindvalleychannels.databinding.ItemChildDataPortraitBinding
 import com.sam43.mindvalleychannels.utils.loadImage
 

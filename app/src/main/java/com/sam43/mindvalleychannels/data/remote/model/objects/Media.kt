@@ -1,9 +1,9 @@
-package com.sam43.mindvalleychannels.data.remote.objects
+package com.sam43.mindvalleychannels.data.remote.model.objects
 
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
-import com.sam43.mindvalleychannels.data.remote.common.CoverAsset
+import com.sam43.mindvalleychannels.data.remote.model.common.CoverAsset
 
 @Keep
 data class Media(

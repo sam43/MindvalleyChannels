@@ -1,4 +1,4 @@
-package com.sam43.mindvalleychannels.data.remote.common
+package com.sam43.mindvalleychannels.data.remote.model.common
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName

@@ -1,10 +1,10 @@
-package com.sam43.mindvalleychannels.data.remote
+package com.sam43.mindvalleychannels.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
-import com.sam43.mindvalleychannels.data.remote.objects.Category
-import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
-import com.sam43.mindvalleychannels.data.remote.objects.Media
+import com.sam43.mindvalleychannels.data.remote.model.objects.Category
+import com.sam43.mindvalleychannels.data.remote.model.objects.ChannelsItem
+import com.sam43.mindvalleychannels.data.remote.model.objects.Media
 
 @Keep
 data class ResponseData(

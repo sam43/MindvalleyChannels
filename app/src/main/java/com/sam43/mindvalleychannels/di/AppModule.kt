@@ -5,7 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
 import com.sam43.mindvalleychannels.BuildConfig
-import com.sam43.mindvalleychannels.network.Api
+import com.sam43.mindvalleychannels.data.remote.service.Api
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

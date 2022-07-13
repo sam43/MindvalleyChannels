@@ -4,10 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sam43.mindvalleychannels.data.remote.ResponseEvent
 import com.sam43.mindvalleychannels.di.DispatcherProvider
-import com.sam43.mindvalleychannels.repository.MainRepository
+import com.sam43.mindvalleychannels.data.repository.MainRepository
 import com.sam43.mindvalleychannels.utils.parser.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject

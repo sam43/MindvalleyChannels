@@ -1,7 +1,7 @@
 package test
 
 import androidx.annotation.CallSuper
-import com.sam43.mindvalleychannels.network.Api
+import com.sam43.mindvalleychannels.data.remote.service.Api
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

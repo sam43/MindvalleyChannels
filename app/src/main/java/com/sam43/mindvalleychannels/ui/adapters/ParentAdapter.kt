@@ -5,25 +5,20 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
-import com.sam43.mindvalleychannels.R
-import com.sam43.mindvalleychannels.data.remote.common.LatestMedia
-import com.sam43.mindvalleychannels.data.remote.common.Sery
-import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
+import com.sam43.mindvalleychannels.data.remote.model.common.LatestMedia
+import com.sam43.mindvalleychannels.data.remote.model.common.Sery
 import com.sam43.mindvalleychannels.databinding.ItemParentDataBinding
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.ViewType
-import com.sam43.mindvalleychannels.ui.model.TitledList
+import com.sam43.mindvalleychannels.ui.uimodel.TitledList
 import com.sam43.mindvalleychannels.utils.AppConstants.TAG
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_GRID_CATEGORY
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_RAIL_LANDSCAPE
 import com.sam43.mindvalleychannels.utils.AppConstants.TYPE_RAIL_PORTRAIT
-import com.sam43.mindvalleychannels.utils.AppConstants.isListOfType
 import com.sam43.mindvalleychannels.utils.AppConstants.isMutableListOfType
-import com.sam43.mindvalleychannels.utils.loadImage
 import com.sam43.mindvalleychannels.utils.loadImageCircular
 
 @SuppressLint("NotifyDataSetChanged")

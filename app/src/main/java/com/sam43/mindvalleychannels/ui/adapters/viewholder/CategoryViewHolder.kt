@@ -1,6 +1,6 @@
 package com.sam43.mindvalleychannels.ui.adapters.viewholder
 
-import com.sam43.mindvalleychannels.data.remote.objects.Category
+import com.sam43.mindvalleychannels.data.remote.model.objects.Category
 import com.sam43.mindvalleychannels.databinding.ItemChildDataCategoryBinding
 
 class CategoryViewHolder(

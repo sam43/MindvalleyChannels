@@ -9,21 +9,23 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import com.sam43.mindvalleychannels.R
-import com.sam43.mindvalleychannels.data.remote.ResponseData
+import com.sam43.mindvalleychannels.data.remote.model.ResponseData
 import com.sam43.mindvalleychannels.data.remote.ResponseEvent
-import com.sam43.mindvalleychannels.data.remote.objects.ChannelsItem
+import com.sam43.mindvalleychannels.data.remote.model.objects.ChannelsItem
 import com.sam43.mindvalleychannels.databinding.MainFragmentBinding
 import com.sam43.mindvalleychannels.ui.adapters.ChildAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ParentAdapter
 import com.sam43.mindvalleychannels.ui.adapters.ScrollStateHolder
 import com.sam43.mindvalleychannels.ui.adapters.viewholder.ViewType
-import com.sam43.mindvalleychannels.ui.model.TitledList
+import com.sam43.mindvalleychannels.ui.uimodel.TitledList
 import com.sam43.mindvalleychannels.utils.AppConstants.TAG
 import com.sam43.mindvalleychannels.utils.showError
 import dagger.hilt.android.AndroidEntryPoint
@@ -156,25 +158,27 @@ class MainFragment : Fragment() {
             }
         }
         lifecycleScope.launchWhenStarted {
-            viewModel.status.collectLatest { isLoading ->
-                binding.contentEpisode.rvEpisodes.isVisible = !isLoading
-                binding.contentEpisode.epiShimmerLayout.isVisible = isLoading
-                binding.rvChannels.isVisible = !isLoading
-                binding.channelShimmerLayout.isVisible = isLoading
-                binding.swipeRefresh.isRefreshing = isLoading
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.status.collectLatest { isLoading ->
+                    binding.contentEpisode.rvEpisodes.isVisible = !isLoading
+                    binding.contentEpisode.epiShimmerLayout.isVisible = isLoading
+                    binding.rvChannels.isVisible = !isLoading
+                    binding.channelShimmerLayout.isVisible = isLoading
+                    binding.swipeRefresh.isRefreshing = isLoading
+                }
             }
         }
     }
 
     private fun getDefinedList(it: ChannelsItem): MutableList<Any> =
         when {
-            it.series.isNullOrEmpty() -> it.latestMedia.toMutableList()
+            it.series.isEmpty() -> it.latestMedia.toMutableList()
             else -> it.series.toMutableList()
         }
 
     private fun getViewType(it: ChannelsItem): String =
         when {
-            it.series.isNullOrEmpty() -> ViewType.COURSE.type
+            it.series.isEmpty() -> ViewType.COURSE.type
             else -> ViewType.SERIES.type
         }
 
