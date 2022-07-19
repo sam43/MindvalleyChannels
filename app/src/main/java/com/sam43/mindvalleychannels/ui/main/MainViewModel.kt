@@ -32,9 +32,9 @@ class MainViewModel @Inject constructor(
             channels, newEpisodes, categories
         ) { ch, ne, ca ->
             ch is ResponseEvent.Loading || ne is ResponseEvent.Loading || ca is ResponseEvent.Loading
-        }.collectLatest {
+        }.onEach {
             _status.value = it
-        }
+        }.launchIn(this)
     }
 
     fun consumeRemoteChannels() {

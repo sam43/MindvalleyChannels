@@ -1,13 +1,16 @@
 package com.sam43.mindvalleychannels.data.repository
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.sam43.mindvalleychannels.data.remote.model.ResponseData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import test.CoroutineTestRule
 import test.repository.FakeMainRepositoryImpl
 
 @ExperimentalCoroutinesApi
@@ -15,8 +18,14 @@ import test.repository.FakeMainRepositoryImpl
 class MainRepositoryImplTest {
     private val repository: MainRepository by lazy { FakeMainRepositoryImpl() }
 
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    var coroutinesTestRule = CoroutineTestRule()
+
     @Test
-    fun `test channels flow, return SUCCESS if matches`(): Unit = runBlocking {
+    fun `test channels flow, return SUCCESS if matches`(): Unit = runBlocking(coroutinesTestRule.testDispatcherProvider.io()) {
         var data: ResponseData? = null
         repository.getChannelsData().collectLatest {
             data = it.data

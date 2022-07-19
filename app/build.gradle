@@ -91,7 +91,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
 
     // Coroutines
@@ -122,7 +121,7 @@ dependencies {
     testImplementation("org.mockito:mockito-inline:$androidXMockitoVersion")
     //For runBlockingTest, CoroutineDispatcher etc.
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1'
-    // retrofit mock
+    // retrofit mock web server
     testImplementation 'com.squareup.retrofit2:retrofit-mock:2.6.2'
     testImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
 
